@@ -2,43 +2,46 @@
 <html lang="en" class="notranslate" translate="no">
 <head>
 <meta charset="UTF-8"><meta name="google" content="notranslate"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>عالمك الخاص ✨</title>
+<title>The Only One ✨</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
 body{margin:0;overflow:hidden;background:#000;font-family:'Cairo',sans-serif;color:#fff}
 #ui{position:fixed;z-index:100;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
-#box{background:rgba(0,0,0,.8);padding:35px;border-radius:25px;border:2px solid #ff007f;text-align:center;box-shadow:0 0 40px #ff007f44}
-input{padding:12px;width:140px;text-align:center;font-size:22px;border-radius:10px;border:none;margin-bottom:15px;outline:none}
-button{padding:12px 35px;background:#ff007f;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:18px}
+#box{background:rgba(20,20,20,0.9);padding:40px;border-radius:30px;border:3px solid #ff007f;text-align:center;box-shadow:0 0 60px #ff007f88;backdrop-filter:blur(10px)}
+input{padding:15px;width:160px;text-align:center;font-size:25px;border-radius:15px;border:2px solid #ff007f;background:#000;color:#ff007f;margin-bottom:20px;outline:none}
+button{padding:12px 50px;background:#ff007f;color:#fff;border:none;border-radius:15px;cursor:pointer;font-weight:900;font-size:22px;transition:0.3s}
+button:hover{transform:scale(1.1);box-shadow:0 0 20px #ff007f}
 canvas{display:block;position:fixed;top:0;left:0;z-index:1}
-#countdown,#final-wrap{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:200;pointer-events:none}
-#countdown{font-size:160px;color:#ff007f;text-shadow:0 0 40px #ff007f}
-#final-wrap{display:none;flex-direction:column;pointer-events:auto;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px)}
-.msg-content{max-width:85%;text-align:center;line-height:1.8;font-size:26px;text-shadow:0 0 15px #ff007f;animation:fadeIn 2s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+#countdown,#final-wrap{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:200}
+#countdown{font-size:200px;color:#ff007f;text-shadow:0 0 50px #ff007f;font-weight:900}
+#final-wrap{display:none;flex-direction:column;background:rgba(0,0,0,0.95);pointer-events:auto}
+.msg-content{max-width:85%;text-align:center;line-height:1.5;font-size:35px;text-shadow:0 0 25px #ff007f;animation:float 3s infinite ease-in-out}
+.big-heart{font-size:100px;color:#ff007f;animation:pulse 1s infinite;margin-top:20px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
 </style>
 </head>
 <body class="notranslate">
 <canvas id="matrix"></canvas>
 <div id="countdown"></div>
-
 <div id="final-wrap">
     <div class="msg-content">
-        يا بقرتي اللي خطفت قلبي من وسط الكل ❤️<br>
-        عاوزك تعرفي إن لو قدامي بنات الدنيا كلها..<br>
-        مش هشوف غيرك أنتي، لأنك في عيني أجمل واحدة اتخلقت ✨<br>
-        أنتي كوكبي الخاص، ودنيتي اللي بهرب فيها..<br>
-        بحبك يا بقرتي الحلوة ومهما حصل هتفضلي أنتي الأولى والأخيرة ❤️
+        يا بقرتي اللي مفيش منها اتنين.. ❤️<br>
+        عارفة؟ لو لفيت الدنيا كعب داير ولقيت بنات بعدد النجوم..<br>
+        عيني مش هتشوف غيرك، لأنك "الأصل" والباقي تقليد ✨<br>
+        أنتي مش بس حبيبتي، أنتي كوكبي اللي عايش فيه لوحدي..<br>
+        بحبك يا أجمل صدفة في حياتي، وهتفضلي ملكي لوحدي للأبد! ❤️
     </div>
-    <br>
-    <button onclick="location.reload()" style="background:#444">رجوع</button>
+    <div class="big-heart">❤️</div>
+    <br><button onclick="location.reload()" style="background:#333;font-size:15px;padding:10px 20px">العودة للواقع</button>
 </div>
 
 <div id="ui">
     <div id="box">
-        <h2 style="color:#ff007f">اكتبي كلمة السر يا قمر ✨</h2>
+        <h1 style="color:#ff007f;font-size:30px;margin-bottom:10px">عالم Bakr الخاص ✨</h1>
+        <p style="color:#aaa;margin-bottom:25px">ممنوع الدخول لغير "ست البنات"</p>
         <input type="number" id="p" placeholder="2009"><br>
-        <button onclick="go()">دخول</button>
+        <button onclick="go()">افتحي قلبك</button>
     </div>
 </div>
 
@@ -47,21 +50,30 @@ const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight; canvas.width = window.innerWidth;
 
-// الكلام الكثير اللي هيقع في المطر الوردي
-const words = ["يا بقرتي","أجمل واحدة","يا جاموسة قلبي","بحبك يا عّم","يا حلوة الكون","أنتي ملكي","مفيش غيرك","قمر حياتي","يا دلوعة","ست البنات","أجمل صدفة"];
-const columns = Array(Math.floor(canvas.width / 25)).fill(1);
+const words = ["يا بقرتي", "أجمل واحدة", "يا جاموسة قلبي", "بحبك يا عّم", "يا حلوة الكون", "أنتي ملكي", "مفيش غيرك", "قمر حياتي", "يا دلوعة", "ست البنات", "❤️", "✨"];
+const fontSize = 32;
+const columns = Array(Math.floor(canvas.width / 45)).fill(1);
 let anim;
 
 function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; 
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ff007f";
-  ctx.font = "bold 18px 'Cairo'";
+  
+  // حركة "البرق الوردي" العشوائية
+  if(Math.random() > 0.98) {
+    ctx.fillStyle = "rgba(255, 0, 127, 0.15)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   columns.forEach((y, i) => {
     const txt = words[Math.floor(Math.random() * words.length)];
-    ctx.fillText(txt, i * 25, y);
-    if (y > 150 + Math.random() * 15000) columns[i] = 0;
-    else columns[i] = y + 25;
+    // تنويع الألوان بين الوردي والأبيض
+    ctx.fillStyle = Math.random() > 0.8 ? "#fff" : "#ff007f";
+    ctx.font = "900 " + fontSize + "px 'Cairo'";
+    ctx.fillText(txt, i * 45, y);
+    
+    if (y > 200 + Math.random() * 15000) columns[i] = 0;
+    else columns[i] = y + fontSize + 5;
   });
 }
 
@@ -75,16 +87,20 @@ function go() {
       cd.innerText = v[i++];
       if(i > 3) {
         clearInterval(itv); cd.style.display = 'none';
-        anim = setInterval(draw, 50); 
-        // المطر هيفضل شغال لمدة دقيقة ونصف (90 ثانية) قبل الرسالة الأخيرة
+        anim = setInterval(draw, 50);
+        // دقيقتين من العظمة السينمائية
         setTimeout(() => {
           clearInterval(anim);
           document.getElementById('final-wrap').style.display = 'flex';
-        }, 90000); 
+        }, 120000); 
       }
     }, 1000);
-  } else { alert("الباسورد غلط يا قمر!"); }
+  } else { alert("الباسورد 2009 يا قمر!"); }
 }
+
+window.onresize = () => {
+    canvas.height = window.innerHeight; canvas.width = window.innerWidth;
+};
 </script>
 </body>
 </html>
