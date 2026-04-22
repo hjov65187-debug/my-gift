@@ -27,7 +27,7 @@ canvas{display:block;position:fixed;top:0;left:0;z-index:1}
 <div id="big-words-wrap"><div class="big-word" id="big-word-text"></div></div>
 
 <audio id="bgMusic" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    <source src="https://f.top4top.io/m_22453v7w91.mp3" type="audio/mpeg">
 </audio>
 
 <div id="final-wrap">
@@ -56,17 +56,16 @@ const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight; canvas.width = window.innerWidth;
 
-// الخلفية صغيرة ومش بتلغوش
 const words = ["يا بقرتي", "أجمل واحدة", "بحبك", "❤️", "😉"];
-const bigWords = ["بقرتي ❤️", "عليك عيون 😉", "أجمل واحدة", "ملكي للأبد ❤️", "جاموسة قلبي 😉", "بحبك ✨"];
-const fontSize = 18; // خط صغير للخلفية
+const bigWords = ["بقرتي ❤️", "عليك عيون 😉", "أجمل واحدة", "ملكي للأبد ❤️", "بحبك ✨"];
+const fontSize = 18;
 const columns = Array(Math.floor(canvas.width / 30)).fill(1);
 let anim, bigAnim, bIdx = 0;
 
 function draw() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ff007f33"; // لون خفيف جداً للخلفية
+  ctx.fillStyle = "#ff007f33"; 
   ctx.font = fontSize + "px 'Cairo'";
   columns.forEach((y, i) => {
     const txt = words[Math.floor(Math.random() * words.length)];
@@ -83,7 +82,10 @@ function updateBigWord() {
 
 function go() {
   if(document.getElementById('p').value=="2009") {
-    document.getElementById('bgMusic').play();
+    // تشغيل الأغنية فوراً
+    const music = document.getElementById('bgMusic');
+    music.play().catch(e => console.log("Music play failed:", e));
+    
     document.getElementById('ui').style.display='none';
     const cd = document.getElementById('countdown');
     const v = ["3", "2", "1"]; let i = 0;
@@ -95,7 +97,7 @@ function go() {
         anim = setInterval(draw, 60);
         document.getElementById('big-words-wrap').style.display = 'flex';
         updateBigWord();
-        bigAnim = setInterval(updateBigWord, 4000); // تغيير كل 4 ثواني بهدوء
+        bigAnim = setInterval(updateBigWord, 4000);
         setTimeout(() => {
           clearInterval(anim); clearInterval(bigAnim);
           document.getElementById('big-words-wrap').style.display = 'none';
