@@ -1,123 +1,90 @@
 <!DOCTYPE html>
 <html lang="en" class="notranslate" translate="no">
 <head>
-    <meta charset="UTF-8"><meta name="google" content="notranslate">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Our Universe</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap');
-        body { margin: 0; overflow: hidden; background: #000; font-family: 'Cairo', sans-serif; }
-        canvas { display: block; position: fixed; top: 0; left: 0; }
-        #ui { position: fixed; z-index: 100; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, transparent, #000); }
-        .card { background: rgba(0,0,0,0.85); padding: 40px; border-radius: 30px; border: 2px solid #ff4d6d; text-align: center; color: #fff; backdrop-filter: blur(15px); box-shadow: 0 0 50px #ff4d6d44; }
-        input { padding: 15px; width: 150px; text-align: center; font-size: 22px; border-radius: 12px; border: none; margin-bottom: 20px; outline: none; }
-        button { padding: 12px 40px; background: #ff4d6d; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px; transition: 0.3s; }
-        button:hover { background: #ff758f; transform: scale(1.05); }
-        #content { display: none; position: fixed; width: 100%; height: 100%; z-index: 50; pointer-events: none; }
-        .overlay-text { position: absolute; top: 20%; width: 100%; text-align: center; color: white; font-size: 2.5rem; text-shadow: 0 0 20px #ff4d6d; opacity: 0; transition: 1.5s; pointer-events: none; }
-        .gallery { position: absolute; bottom: 10%; width: 100%; display: flex; justify-content: center; gap: 20px; pointer-events: auto; }
-        .photo { width: 100px; height: 100px; border: 2px solid #fff; border-radius: 10px; object-fit: cover; transition: 0.5s; cursor: pointer; }
-        .photo:hover { transform: scale(3) translateY(-20px); z-index: 1000; }
-    </style>
+<meta charset="UTF-8"><meta name="google" content="notranslate"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>عالمك الخاص ✨</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+body{margin:0;overflow:hidden;background:#000;font-family:'Cairo',sans-serif;color:#fff}
+#ui{position:fixed;z-index:100;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
+#box{background:rgba(0,0,0,.8);padding:35px;border-radius:25px;border:2px solid #ff007f;text-align:center;box-shadow:0 0 40px #ff007f44}
+input{padding:12px;width:140px;text-align:center;font-size:22px;border-radius:10px;border:none;margin-bottom:15px;outline:none}
+button{padding:12px 35px;background:#ff007f;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:18px}
+canvas{display:block;position:fixed;top:0;left:0;z-index:1}
+#countdown,#final-wrap{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:200;pointer-events:none}
+#countdown{font-size:160px;color:#ff007f;text-shadow:0 0 40px #ff007f}
+#final-wrap{display:none;flex-direction:column;pointer-events:auto;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px)}
+.msg-content{max-width:85%;text-align:center;line-height:1.8;font-size:26px;text-shadow:0 0 15px #ff007f;animation:fadeIn 2s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body class="notranslate">
+<canvas id="matrix"></canvas>
+<div id="countdown"></div>
+
+<div id="final-wrap">
+    <div class="msg-content">
+        يا بقرتي اللي خطفت قلبي من وسط الكل ❤️<br>
+        عاوزك تعرفي إن لو قدامي بنات الدنيا كلها..<br>
+        مش هشوف غيرك أنتي، لأنك في عيني أجمل واحدة اتخلقت ✨<br>
+        أنتي كوكبي الخاص، ودنيتي اللي بهرب فيها..<br>
+        بحبك يا بقرتي الحلوة ومهما حصل هتفضلي أنتي الأولى والأخيرة ❤️
+    </div>
+    <br>
+    <button onclick="location.reload()" style="background:#444">رجوع</button>
+</div>
 
 <div id="ui">
-    <div class="card" id="box">
-        <h1 style="color:#ff4d6d; margin-bottom:10px;">عالمنا الخاص ✨</h1>
-        <p style="margin-bottom:20px;">اكتبي الباسورد يا ست البنات (2009)</p>
-        <input type="number" id="p" placeholder="????"><br>
-        <button onclick="unlock()">دخول</button>
+    <div id="box">
+        <h2 style="color:#ff007f">اكتبي كلمة السر يا قمر ✨</h2>
+        <input type="number" id="p" placeholder="2009"><br>
+        <button onclick="go()">دخول</button>
     </div>
 </div>
 
-<div id="content">
-    <div id="msg" class="overlay-text"></div>
-    <div class="gallery">
-        <img src="https://via.placeholder.com/150" class="photo" alt="شات 1">
-        <img src="https://via.placeholder.com/150" class="photo" alt="شات 2">
-        <img src="https://via.placeholder.com/150" class="photo" alt="شات 3">
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-    let s, c, r, pts, st;
-    const msgs = [
-        "يا بقرتي اللي منورة حياتي ❤️",
-        "يا جاموسة قلبي.. مفيش زيك في الدنيا!",
-        "أنتي حلوة الكون ده كله يا قمر..",
-        "ضحكتك دي هي اللي بتخليني طاير ✨",
-        "يا أغلى حاجة حصلت لي في 2007 لحد النهاردة ❤️",
-        "بحبك حب ملوش آخر يا ست البنات!"
-    ];
-    let mIdx = 0;
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.height = window.innerHeight; canvas.width = window.innerWidth;
 
-    function init() {
-        s = new THREE.Scene();
-        c = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        r = new THREE.WebGLRenderer({antialias: true});
-        r.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(r.domElement);
+// الكلام الكثير اللي هيقع في المطر الوردي
+const words = ["يا بقرتي","أجمل واحدة","يا جاموسة قلبي","بحبك يا عّم","يا حلوة الكون","أنتي ملكي","مفيش غيرك","قمر حياتي","يا دلوعة","ست البنات","أجمل صدفة"];
+const columns = Array(Math.floor(canvas.width / 25)).fill(1);
+let anim;
 
-        // كوكب من النقط (Particles)
-        const g = new THREE.SphereGeometry(2.5, 100, 100);
-        const m = new THREE.PointsMaterial({color: 0xff4d6d, size: 0.02});
-        pts = new THREE.Points(g, m);
-        s.add(pts);
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#ff007f";
+  ctx.font = "bold 18px 'Cairo'";
+  columns.forEach((y, i) => {
+    const txt = words[Math.floor(Math.random() * words.length)];
+    ctx.fillText(txt, i * 25, y);
+    if (y > 150 + Math.random() * 15000) columns[i] = 0;
+    else columns[i] = y + 25;
+  });
+}
 
-        // نجوم في الخلفية
-        const sg = new THREE.BufferGeometry();
-        const sp = [];
-        for(let i=0; i<10000; i++) sp.push((Math.random()-0.5)*200, (Math.random()-0.5)*200, (Math.random()-0.5)*200);
-        sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
-        st = new THREE.Points(sg, new THREE.PointsMaterial({color: 0xffffff, size: 0.05}));
-        s.add(st);
-
-        c.position.z = 10;
-        loop();
-    }
-
-    function unlock() {
-        if(document.getElementById('p').value == "2009") {
-            document.getElementById('ui').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-            showMsg();
-            setInterval(showMsg, 4000);
-        } else { alert("الباسورد 2009 يا قمر!"); }
-    }
-
-    function showMsg() {
-        const el = document.getElementById('msg');
-        el.style.opacity = 0;
+function go() {
+  if(document.getElementById('p').value=="2009") {
+    document.getElementById('ui').style.display='none';
+    const cd = document.getElementById('countdown');
+    const v = ["3", "2", "1"]; let i = 0;
+    cd.style.display = 'flex';
+    const itv = setInterval(() => {
+      cd.innerText = v[i++];
+      if(i > 3) {
+        clearInterval(itv); cd.style.display = 'none';
+        anim = setInterval(draw, 50); 
+        // المطر هيفضل شغال لمدة دقيقة ونصف (90 ثانية) قبل الرسالة الأخيرة
         setTimeout(() => {
-            el.innerText = msgs[mIdx];
-            el.style.opacity = 1;
-            mIdx = (mIdx + 1) % msgs.length;
-        }, 1000);
-    }
-
-    function loop() {
-        requestAnimationFrame(loop);
-        pts.rotation.y += 0.002;
-        st.rotation.y -= 0.0001;
-        
-        // حركة كاميرا سينمائية بتبعد وبتقرب
-        let t = Date.now() * 0.0004;
-        c.position.x = Math.sin(t) * 12;
-        c.position.z = Math.cos(t) * 12;
-        c.position.y = Math.sin(t * 0.5) * 3;
-        c.lookAt(pts.position);
-        
-        r.render(s, c);
-    }
-
-    init();
-    window.onresize = () => {
-        c.aspect = window.innerWidth/window.innerHeight;
-        c.updateProjectionMatrix();
-        r.setSize(window.innerWidth, window.innerHeight);
-    };
+          clearInterval(anim);
+          document.getElementById('final-wrap').style.display = 'flex';
+        }, 90000); 
+      }
+    }, 1000);
+  } else { alert("الباسورد غلط يا قمر!"); }
+}
 </script>
 </body>
 </html>
