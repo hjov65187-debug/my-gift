@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كوكب حبنا اللانهائي</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050005; font-family: 'Cairo', sans-serif; }
+        canvas { display: block; }
+        #ui-layer {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            width: 90%;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 40px rgba(255, 77, 109, 0.3);
+        }
+        h1 { color: #ff4d6d; font-size: 2.5rem; text-shadow: 0 0 15px #ff4d6d; margin-bottom: 20px; }
+        input { padding: 12px; border-radius: 10px; border: none; width: 200px; text-align: center; font-size: 1.1rem; }
+        button { 
+            padding: 12px 30px; background: #ff4d6d; color: white; border: none; 
+            border-radius: 10px; cursor: pointer; margin-top: 15px; font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background: #ff758f; transform: scale(1.05); }
+        #love-msg { display: none; color: white; font-size: 1.5rem; line-height: 1.8; animation: fadeIn 2s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div class="glass-card" id="login-box">
+            <h1>عالم الحب الخاص بكِ ✨</h1>
+            <input type="password" id="pass" placeholder="كلمة السر...">
+            <br>
+            <button onclick="unlockWorld()">اكتشفي المفاجأة</button>
+        </div>
+        <div id="love-msg">
+            <h1 style="font-size: 3rem;">أحبكِ ❤️</h1>
+            <p>أنتي الكوكب الذي أدور حوله، والنجمة التي تضيء عتمتي..</p>
+            <p>كل ثانية وأنتي بجانبي هي عيد حقيقي لي.</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, globe, stars;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // إضاءة سينمائية
+            const ambientLight = new THREE.AmbientLight(0x404040, 2); 
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xff4d6d, 2);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // صنع كوكب الحب (جرافيتي وردي متوهج)
+            const geometry = new THREE.SphereGeometry(2, 64, 64);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xff0055,
+                emissive: 0x330011,
+                shininess: 100,
+                bumpScale: 0.05
+            });
+            globe = new THREE.Mesh(geometry, material);
+            scene.add(globe);
+
+            // إضافة حلقة زينة حول الكوكب (مثل زحل)
+            const ringGeo = new THREE.TorusGeometry(3, 0.02, 16, 100);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            globe.add(ring);
+
+            // خلفية النجوم المتحركة
+            const starGeo = new THREE.BufferGeometry();
+            const starCoords = [];
+            for(let i=0; i<2000; i++) {
+                starCoords.push((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100);
+            }
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+            const starMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.05});
+            stars = new THREE.Points(starGeo, starMat);
+            scene.add(stars);
+
+            camera.position.z = 6;
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            globe.rotation.y += 0.003; // دوران الكوكب
+            stars.rotation.y -= 0.0005; // حركة النجوم
+            renderer.render(scene, camera);
+        }
+
+        function unlockWorld() {
+            const val = document.getElementById('pass').value;
+            if(val === "2026") {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('love-msg').style.display = 'block';
+                // تغيير لون الكوكب وتوهجه عند الدخول
+                globe.material.color.setHex(0x00ffcc); 
+                globe.material.emissive.setHex(0x003322);
+            } else {
+                alert("الرمز خطأ يا حبيبتي!");
+            }
+        }
+
+        init();
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
