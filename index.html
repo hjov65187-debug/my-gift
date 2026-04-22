@@ -1,22 +1,123 @@
 <!DOCTYPE html>
 <html lang="en" class="notranslate" translate="no">
 <head>
-<meta charset="UTF-8"><meta name="google" content="notranslate"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>3D Planet</title>
-<style>body{margin:0;overflow:hidden;background:#000}#ui{position:fixed;z-index:100;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,transparent,#000)}#box{background:rgba(0,0,0,.8);padding:30px;border-radius:20px;border:2px solid #ff4d6d;text-align:center;color:#white;backdrop-filter:blur(10px)}input{padding:12px;width:120px;text-align:center;font-size:20px;border-radius:8px;border:none;margin-bottom:15px}button{padding:10px 30px;background:#ff4d6d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700}#m{display:none;position:fixed;top:20%;width:100%;text-align:center;z-index:200;color:#fff;font-size:32px;font-weight:700;text-shadow:0 0 20px #ff4d6d}</style>
+    <meta charset="UTF-8"><meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Our Universe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap');
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Cairo', sans-serif; }
+        canvas { display: block; position: fixed; top: 0; left: 0; }
+        #ui { position: fixed; z-index: 100; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, transparent, #000); }
+        .card { background: rgba(0,0,0,0.85); padding: 40px; border-radius: 30px; border: 2px solid #ff4d6d; text-align: center; color: #fff; backdrop-filter: blur(15px); box-shadow: 0 0 50px #ff4d6d44; }
+        input { padding: 15px; width: 150px; text-align: center; font-size: 22px; border-radius: 12px; border: none; margin-bottom: 20px; outline: none; }
+        button { padding: 12px 40px; background: #ff4d6d; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px; transition: 0.3s; }
+        button:hover { background: #ff758f; transform: scale(1.05); }
+        #content { display: none; position: fixed; width: 100%; height: 100%; z-index: 50; pointer-events: none; }
+        .overlay-text { position: absolute; top: 20%; width: 100%; text-align: center; color: white; font-size: 2.5rem; text-shadow: 0 0 20px #ff4d6d; opacity: 0; transition: 1.5s; pointer-events: none; }
+        .gallery { position: absolute; bottom: 10%; width: 100%; display: flex; justify-content: center; gap: 20px; pointer-events: auto; }
+        .photo { width: 100px; height: 100px; border: 2px solid #fff; border-radius: 10px; object-fit: cover; transition: 0.5s; cursor: pointer; }
+        .photo:hover { transform: scale(3) translateY(-20px); z-index: 1000; }
+    </style>
 </head>
-<body>
-<div id="m"></div>
-<div id="ui"><div id="box"><h2 style="color:#ff4d6d">عالم حبنا 3D ✨</h2>
-<input type="number" id="p" placeholder="2007"><br>
-<button onclick="go()">دخول</button></div></div>
+<body class="notranslate">
+
+<div id="ui">
+    <div class="card" id="box">
+        <h1 style="color:#ff4d6d; margin-bottom:10px;">عالمنا الخاص ✨</h1>
+        <p style="margin-bottom:20px;">اكتبي الباسورد يا ست البنات (2009)</p>
+        <input type="number" id="p" placeholder="????"><br>
+        <button onclick="unlock()">دخول</button>
+    </div>
+</div>
+
+<div id="content">
+    <div id="msg" class="overlay-text"></div>
+    <div class="gallery">
+        <img src="https://via.placeholder.com/150" class="photo" alt="شات 1">
+        <img src="https://via.placeholder.com/150" class="photo" alt="شات 2">
+        <img src="https://via.placeholder.com/150" class="photo" alt="شات 3">
+    </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-let s,c,r,g,st;const w=["يا ست البنات ❤️","يا بقرتي الحلوة ✨","بحبك للأبد ❤️"];let idx=0;
-function init(){s=new THREE.Scene();c=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,.1,1000);r=new THREE.WebGLRenderer({antialias:true});r.setSize(window.innerWidth,window.innerHeight);document.body.appendChild(r.domElement);g=new THREE.Mesh(new THREE.SphereGeometry(2,64,64),new THREE.MeshPhongMaterial({color:0xff0055,emissive:0x330011}));s.add(g);let sg=new THREE.BufferGeometry();let sp=[];for(let i=0;i<5000;i++)sp.push((Math.random()-.5)*100,(Math.random()-.5)*100,(Math.random()-.5)*100);sg.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));st=new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.05}));s.add(st);let l=new THREE.PointLight(0xffffff,1.5);l.position.set(10,10,10);s.add(l);c.position.z=7;loop()}
-function go(){const val=document.getElementById('p').value;if(val=="2007"){document.getElementById('ui').style.display='none';document.getElementById('m').style.display='block';setInterval(()=>{document.getElementById('m').innerText=w[idx];idx=(idx+1)%w.length},3000)}else{alert("اكتبي 2007")}}
-function loop(){requestAnimationFrame(loop);g.rotation.y+=.005;st.rotation.y-=.0001;let t=Date.now()*.0005;c.position.x=Math.sin(t)*6;c.position.z=Math.cos(t)*6;c.lookAt(g.position);r.render(s,c)}
-init();
+    let s, c, r, pts, st;
+    const msgs = [
+        "يا بقرتي اللي منورة حياتي ❤️",
+        "يا جاموسة قلبي.. مفيش زيك في الدنيا!",
+        "أنتي حلوة الكون ده كله يا قمر..",
+        "ضحكتك دي هي اللي بتخليني طاير ✨",
+        "يا أغلى حاجة حصلت لي في 2007 لحد النهاردة ❤️",
+        "بحبك حب ملوش آخر يا ست البنات!"
+    ];
+    let mIdx = 0;
+
+    function init() {
+        s = new THREE.Scene();
+        c = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        r = new THREE.WebGLRenderer({antialias: true});
+        r.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(r.domElement);
+
+        // كوكب من النقط (Particles)
+        const g = new THREE.SphereGeometry(2.5, 100, 100);
+        const m = new THREE.PointsMaterial({color: 0xff4d6d, size: 0.02});
+        pts = new THREE.Points(g, m);
+        s.add(pts);
+
+        // نجوم في الخلفية
+        const sg = new THREE.BufferGeometry();
+        const sp = [];
+        for(let i=0; i<10000; i++) sp.push((Math.random()-0.5)*200, (Math.random()-0.5)*200, (Math.random()-0.5)*200);
+        sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+        st = new THREE.Points(sg, new THREE.PointsMaterial({color: 0xffffff, size: 0.05}));
+        s.add(st);
+
+        c.position.z = 10;
+        loop();
+    }
+
+    function unlock() {
+        if(document.getElementById('p').value == "2009") {
+            document.getElementById('ui').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            showMsg();
+            setInterval(showMsg, 4000);
+        } else { alert("الباسورد 2009 يا قمر!"); }
+    }
+
+    function showMsg() {
+        const el = document.getElementById('msg');
+        el.style.opacity = 0;
+        setTimeout(() => {
+            el.innerText = msgs[mIdx];
+            el.style.opacity = 1;
+            mIdx = (mIdx + 1) % msgs.length;
+        }, 1000);
+    }
+
+    function loop() {
+        requestAnimationFrame(loop);
+        pts.rotation.y += 0.002;
+        st.rotation.y -= 0.0001;
+        
+        // حركة كاميرا سينمائية بتبعد وبتقرب
+        let t = Date.now() * 0.0004;
+        c.position.x = Math.sin(t) * 12;
+        c.position.z = Math.cos(t) * 12;
+        c.position.y = Math.sin(t * 0.5) * 3;
+        c.lookAt(pts.position);
+        
+        r.render(s, c);
+    }
+
+    init();
+    window.onresize = () => {
+        c.aspect = window.innerWidth/window.innerHeight;
+        c.updateProjectionMatrix();
+        r.setSize(window.innerWidth, window.innerHeight);
+    };
 </script>
 </body>
 </html>
