@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هدية خاصة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #d63384; }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #d63384;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #message { margin-top: 20px; display: none; font-weight: bold; color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>مرحباً بكِ!</h1>
+        <p>أدخلي رمز الدخول لمشاهدة المفاجأة:</p>
+        <input type="password" id="password" placeholder="كلمة السر...">
+        <br>
+        <button onclick="checkPassword()">دخول</button>
+        <div id="message">كل سنة وأنتِ طيبة! أتمنى لكِ التوفيق في دراستك بالحاسبات 💻✨</div>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const pass = document.getElementById('password').value;
+            if(pass === "2026") {
+                document.getElementById('message').style.display = 'block';
+            } else {
+                alert("كلمة السر غلط يا بطل!");
+            }
+        }
+    </script>
+</body>
+</html>
