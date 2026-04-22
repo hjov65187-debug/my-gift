@@ -1,186 +1,157 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كوكب حبنا اللانهائي</title>
+    <title>عالم الحب اللانهائي</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-        body { margin: 0; overflow: hidden; background: #010005; font-family: 'Cairo', sans-serif; color: white; }
+        body { margin: 0; overflow: hidden; background: #02000a; font-family: 'Cairo', sans-serif; }
         canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; }
         
         #ui-layer {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
+            position: relative; z-index: 10; display: flex;
+            justify-content: center; align-items: center; height: 100vh;
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 77, 109, 0.3);
-            text-align: center;
-            box-shadow: 0 0 50px rgba(255, 77, 109, 0.2);
-            animation: float 4s ease-in-out infinite;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 30px; border: 2px solid #ff4d6d;
+            text-align: center; box-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
         }
 
-        h1 { color: #ff4d6d; text-shadow: 0 0 20px #ff4d6d; margin-bottom: 25px; font-size: 1.8rem; }
+        h1 { color: #ff4d6d; font-size: 1.5rem; margin-bottom: 20px; }
         input { 
-            padding: 15px; border-radius: 12px; border: 1px solid #ff4d6d; 
-            background: rgba(0,0,0,0.5); color: white; width: 80%; text-align: center;
-            font-size: 1.2rem; outline: none;
+            padding: 12px; border-radius: 10px; border: none; 
+            width: 80%; text-align: center; font-size: 1.2rem; margin-bottom: 15px;
         }
         button { 
-            margin-top: 20px; padding: 12px 40px; background: #ff4d6d; color: white; 
-            border: none; border-radius: 12px; cursor: pointer; font-weight: bold;
-            font-size: 1.1rem; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            padding: 10px 30px; background: #ff4d6d; color: white; 
+            border: none; border-radius: 10px; cursor: pointer; font-weight: bold; 
         }
 
-        #love-content {
-            display: none;
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            padding: 20px;
+        #love-overlay {
+            display: none; position: fixed; top: 10%; width: 100%;
+            text-align: center; z-index: 20; pointer-events: none;
         }
 
-        .romantic-text {
-            font-size: 2rem;
-            color: #fff;
-            text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d;
-            animation: fadeInOut 10s infinite;
-            margin-top: -100px;
-        }
-
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        @keyframes fadeInOut { 
-            0%, 100% { opacity: 0; transform: scale(0.8); }
-            20%, 80% { opacity: 1; transform: scale(1); }
+        .romance-msg {
+            font-size: 2.2rem; color: white; font-weight: bold;
+            text-shadow: 0 0 15px #ff4d6d, 0 0 30px #ff4d6d;
+            opacity: 0; transition: opacity 1.5s;
         }
     </style>
 </head>
 <body>
 
     <div id="ui-layer">
-        <div class="login-card" id="login-box">
-            <h1>عالم حبنا يا ست البنات ✨</h1>
-            <input type="password" id="pass" placeholder="كلمة السر اللي بينا...">
+        <div class="login-card" id="box">
+            <h1>مستني كلمة السر يا بطل.. ✨</h1>
+            <input type="number" id="p" placeholder="اكتب 2007 هنا">
             <br>
-            <button onclick="unlockWorld()">افتحي قلبي</button>
+            <button onclick="check()">دخول</button>
         </div>
+    </div>
 
-        <div id="love-content">
-            <div class="romantic-text" id="dynamic-text">أنتي الكوكب اللي بلف حواليه..</div>
-        </div>
+    <div id="love-overlay">
+        <div id="msg" class="romance-msg"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let scene, camera, renderer, globe, stars, particles;
-
+        let scene, camera, renderer, globe, stars, ring;
+        
         function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({antialias: true});
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // إضاءة قوية ودرامية
-            const light = new THREE.PointLight(0xff4d6d, 3, 50);
-            light.position.set(5, 5, 5);
-            scene.add(light);
-            scene.add(new THREE.AmbientLight(0x404040, 1.5));
-
-            // الكوكب الوردي العملاق (جرافيتي عالي)
-            const globeGeo = new THREE.SphereGeometry(2, 128, 128);
-            const globeMat = new THREE.MeshPhongMaterial({
-                color: 0xff0055,
-                emissive: 0x220005,
-                shininess: 100,
-                wireframe: false
+            // الكوكب الوردي العملاق
+            const geometry = new THREE.SphereGeometry(2, 64, 64);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xff0055, emissive: 0x330011, shininess: 80
             });
-            globe = new THREE.Mesh(globeGeo, globeMat);
+            globe = new THREE.Mesh(geometry, material);
             scene.add(globe);
 
-            // حلقات الزينة (Particles)
-            const partGeo = new THREE.BufferGeometry();
-            const partPos = [];
-            for(let i=0; i<1500; i++) {
-                let angle = Math.random() * Math.PI * 2;
-                let radius = 3 + Math.random() * 1.5;
-                partPos.push(Math.cos(angle)*radius, (Math.random()-0.5)*0.2, Math.sin(angle)*radius);
-            }
-            partGeo.setAttribute('position', new THREE.Float32BufferAttribute(partPos, 3));
-            particles = new THREE.Points(partGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.02}));
-            globe.add(particles);
+            // إضافة حلقات حول الكوكب (زي زحل)
+            const ringGeo = new THREE.TorusGeometry(3.5, 0.05, 16, 100);
+            const ringMat = new THREE.MeshBasicMaterial({color: 0xff4d6d, transparent: true, opacity: 0.5});
+            ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            scene.add(ring);
 
-            // سديم النجوم الخلفي
+            // النجوم في الخلفية
             const starGeo = new THREE.BufferGeometry();
-            const starPos = [];
-            for(let i=0; i<5000; i++) {
-                starPos.push((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100);
+            const starCoords = [];
+            for(let i=0; i<7000; i++) {
+                starCoords.push((Math.random()-0.5)*150, (Math.random()-0.5)*150, (Math.random()-0.5)*150);
             }
-            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.03}));
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+            stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.05}));
             scene.add(stars);
 
-            camera.position.z = 6;
-            animate();
+            const light = new THREE.PointLight(0xffffff, 2, 100);
+            light.position.set(10, 10, 10);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x333333));
+
+            camera.position.z = 8;
+            render();
         }
 
-        const messages = [
-            "يا " "بقرتي" " اللي واكلة عقلي وقلبي ❤️",
-            "أنتي كوكب السكر في عالم مرّ.. ✨",
-            "يا ضحكة منورة الدنيا والكون ده كله..",
-            "أجمل بنت شافتها عيني في الـ 2026 سنة اللي فاتوا!",
-            "بحبك حب ملوش نهاية زي الفضاء ده بالضبط..",
-            "أنتي الدلع كله والجمال المصري الأصيل ❤️"
+        const words = [
+            "يا أجمل صدفة في عمري.. ❤️",
+            "أنتي كوكبي الخاص اللي بهرب فيه من الدنيا..",
+            "يا ست البنات.. ضحكتك دي أماني.. ✨",
+            "يا بقرتي الحلوة.. مفيش في جمالك اتنين!",
+            "بحبك حب ملوش آخر.. زي المجرة دي بالظبط..",
+            "أنتي ملكة قلبي وعالمي كله ❤️"
         ];
-        let msgIndex = 0;
+        let i = 0;
 
-        function updateText() {
-            const textEl = document.getElementById('dynamic-text');
-            textEl.innerHTML = messages[msgIndex];
-            msgIndex = (msgIndex + 1) % messages.length;
+        function check() {
+            const val = document.getElementById('p').value;
+            if(val == "2007") {
+                document.getElementById('box').style.display = 'none';
+                document.getElementById('love-overlay').style.display = 'block';
+                showMsg();
+                setInterval(showMsg, 5000);
+            } else {
+                alert("الباسورد غلط.. جربي 2007");
+            }
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            globe.rotation.y += 0.005;
-            particles.rotation.y += 0.002;
-            stars.rotation.y -= 0.0003;
+        function showMsg() {
+            const m = document.getElementById('msg');
+            m.style.opacity = 0;
+            setTimeout(() => {
+                m.innerText = words[i];
+                m.style.opacity = 1;
+                i = (i + 1) % words.length;
+            }, 1000);
+        }
+
+        function render() {
+            requestAnimationFrame(render);
+            globe.rotation.y += 0.003;
+            ring.rotation.z += 0.01;
+            stars.rotation.y -= 0.0002;
             
-            // حركة كاميرا ناعمة (كنه فيديو)
-            camera.position.x = Math.sin(Date.now() * 0.0005) * 0.5;
-            camera.position.y = Math.cos(Date.now() * 0.0005) * 0.5;
+            // حركة كاميرا سينمائية بطيئة جداً تدوم لدقائق
+            let time = Date.now() * 0.0003;
+            camera.position.x = Math.sin(time) * 7;
+            camera.position.z = Math.cos(time) * 7;
+            camera.position.y = Math.cos(time * 0.5) * 2;
             camera.lookAt(globe.position);
 
             renderer.render(scene, camera);
         }
 
-        function unlockWorld() {
-            const pass = document.getElementById('pass').value;
-            if(pass === "بقرتي") {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('love-content').style.display = 'block';
-                setInterval(updateText, 5000); // تغيير الكلام كل 5 ثواني
-            } else {
-                alert("الباسورد غلط يا قمر!");
-            }
-        }
-
         init();
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
     </script>
 </body>
 </html>
