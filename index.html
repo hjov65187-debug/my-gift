@@ -3,70 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روقان Bakr ✨</title>
+    <title>Bakr Funny World 😂</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap');
-        body { margin:0; overflow:hidden; background:#000; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
-        canvas { position:fixed; top:0; left:0; z-index:1; }
-        #ui { position:relative; z-index:10; text-align:center; background:rgba(0,0,0,0.8); padding:50px; border-radius:20px; border:1px solid #fff; }
-        button { padding:15px 50px; background:#fff; color:#000; border:none; border-radius:10px; font-size:20px; font-weight:bold; cursor:pointer; }
-        #text-box { display:none; position:fixed; z-index:5; text-align:center; width:80%; color:#fff; font-size:35px; line-height:1.6; animation: fadeInOut 6s infinite; }
-        @keyframes fadeInOut { 0%,100% {opacity:0;} 50% {opacity:1;} }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
+        body { margin:0; overflow:hidden; background:#ffcc00; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
+        #ui { position:relative; z-index:10; text-align:center; background:#fff; padding:40px; border-radius:30px; border:5px solid #000; box-shadow: 10px 10px 0px #000; }
+        button { padding:15px 50px; background:#ff007f; color:#fff; border:3px solid #000; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; box-shadow: 5px 5px 0px #000; }
+        button:active { transform: translate(3px, 3px); box-shadow: none; }
+        #joke-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#000; font-size:45px; font-weight:900; text-shadow: 2px 2px #fff; animation: wobble 2s infinite; }
+        @keyframes wobble { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
     </style>
 </head>
 <body>
 
-    <canvas id="bg"></canvas>
-
-    <audio id="pianoMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+    <audio id="funnyMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" type="audio/mpeg">
     </audio>
 
     <div id="ui">
-        <h1 style="color:#fff">عالم بكر الخاص ✨</h1>
-        <button onclick="start()">دخول بهدوء</button>
+        <h1 style="color:#000">عالم بكر الفرفوش 😂</h1>
+        <p style="margin-bottom:20px;">دوس دخول واستعد للصدمة!</p>
+        <button onclick="startFun()">دخول 🤡</button>
     </div>
 
-    <div id="text-box"></div>
+    <div id="joke-box"></div>
 
     <script>
-        const quotes = [
-            "أنتِ زي القهوة.. بتعدلي مودي بكلمة واحدة",
-            "في ناس زي البحر.. مريحين للأعصاب بس غدارين 😂",
-            "الروقان محتاج دماغ فاضية.. وحب حقيقي",
-            "يا مساء الجمال.. على اللي شاغل البال",
-            "أنتِ النسخة الأصلية في زمن كله تقليد"
+        const jokes = [
+            "أنتِ زي باقة النت.. بتخلصي في وقت زنقة 😂",
+            "لو الحب طعمية.. فأنتِ الزيت اللي بيغلي فيها 🥙",
+            "يا مساء الزبادي.. يا اللي وشك زي الرادي 📻",
+            "أنا قلبي محتاج كارت شحن عشان يكمل حبك 📱",
+            "يا واد يا مهلبية.. حبك عملي حساسية 😍",
+            "أنتِ النسخة الصيني.. بس عاجباني برضه 🇨🇳"
         ];
         
         let i = 0;
-        function start() {
-            document.getElementById('pianoMusic').play();
+        function startFun() {
+            document.getElementById('funnyMusic').play();
             document.getElementById('ui').style.display='none';
-            const box = document.getElementById('text-box');
+            const box = document.getElementById('joke-box');
             box.style.display='block';
             
-            // الكلام هيتغير كل 6 ثواني (أبطأ بكتير)
+            // الكلام هيتغير كل 5 ثواني
             setInterval(() => {
-                box.innerText = quotes[i];
-                i = (i + 1) % quotes.length;
-            }, 6000);
-            
-            animate();
-        }
-
-        const canvas = document.getElementById('bg');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function animate() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#fff";
-            ctx.beginPath();
-            ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 0.8, 0, Math.PI*2);
-            ctx.fill();
-            requestAnimationFrame(animate);
+                box.innerText = jokes[i];
+                i = (i + 1) % jokes.length;
+            }, 5000);
         }
     </script>
 </body>
