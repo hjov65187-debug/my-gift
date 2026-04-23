@@ -3,73 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روقان بكر الأصلي ✨</title>
+    <title>عالم بكر الرايق ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
-        body { margin:0; overflow:hidden; background:#050505; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
+        body { margin:0; overflow:hidden; background:#000; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
         canvas { position:fixed; top:0; left:0; z-index:1; }
-        #ui { position:relative; z-index:10; text-align:center; background:rgba(0,0,0,0.9); padding:40px; border-radius:30px; border:3px solid #00ffcc; box-shadow:0 0 30px #00ffcc66; }
-        button { padding:15px 50px; background:#00ffcc; color:#000; border:none; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; box-shadow:0 5px 15px #00ffcc; }
-        #lyrics-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#fff; font-size:45px; text-shadow:0 0 20px #00ffcc; }
-        .fade { animation: fadeEffect 4s infinite; }
-        @keyframes fadeEffect { 0%,100% {opacity:0; transform:scale(0.9);} 50% {opacity:1; transform:scale(1.1);} }
+        #ui { position:relative; z-index:10; text-align:center; background:rgba(0,0,0,0.95); padding:40px; border-radius:30px; border:2px solid #00d2ff; box-shadow:0 0 40px #00d2ff66; }
+        button { padding:15px 60px; background:#00d2ff; color:#000; border:none; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; box-shadow:0 0 15px #00d2ff; }
+        #lyrics-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#fff; font-size:45px; text-shadow:0 0 25px #00d2ff; animation: glow 4s infinite; }
+        @keyframes glow { 0%,100% {opacity:0; transform:scale(0.8); filter:blur(5px);} 50% {opacity:1; transform:scale(1.1); filter:blur(0);} }
     </style>
 </head>
 <body>
 
-    <canvas id="matrix"></canvas>
+    <canvas id="stars"></canvas>
 
-    <audio id="track" loop>
+    <audio id="vibeAudio" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
     </audio>
 
     <div id="ui">
-        <h1 style="color:#00ffcc">عالم بكر ✨</h1>
-        <p style="color:#fff">دوس يا نجم عشان تسمع الروقان</p>
-        <button onclick="playNow()">تشغيل 🔥</button>
+        <h1 style="color:#00d2ff">عالم بكر ✨</h1>
+        <p style="color:#eee">دوس دخول.. الأغنية المرة دي مختلفة 😉</p>
+        <button onclick="startVibe()">دخول ❤️</button>
     </div>
 
-    <div id="lyrics-box" class="fade"></div>
+    <div id="lyrics-box"></div>
 
     <script>
-        const jokes = [
-            "أنتِ زي كارت الشحن.. بشوفك بترد فيا الروح 📱",
-            "لو الحب حواوشي.. فأنتِ الرغيف كله 🌯",
-            "يا مساء الزبادي.. يا اللي حبك في قلبي مش عادي 🍦",
-            "أنتِ النسخة الأصلية.. والباقي صيني مضروب 💎",
-            "يا واد يا مـربـى.. في حبك قلبي اتدبى 😂",
-            "عنيكي زي الـ GPS.. تيهتيني وراكي ومستسلم 📍"
+        const funnyWords = [
+            "أنتِ زي النت في مصر.. بتقطعي قلبي بس ماليش غيرك 😂",
+            "لو الحب حتة قشطة.. فأنتِ العلبة كلها 🍯",
+            "يا مساء البطاطس.. يا اللي حبك في قلبي غاطس 🥔",
+            "أنا قلبي مكرونة وأنتِ الصلصة بتاعتي 🍝",
+            "يا واد يا مربى.. في حبك قلبي اتدبى 😍",
+            "عنيكي فيها كهربا.. كهروباء السد العالي ⚡"
         ];
         
-        let jIdx = 0;
-        const canvas = document.getElementById('matrix');
+        let index = 0;
+        const canvas = document.getElementById('stars');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        function playNow() {
-            const music = document.getElementById('track');
-            music.play(); // دي الحركة اللي بتفك الحظر بتاع المتصفح
-            
+        function startVibe() {
+            const audio = document.getElementById('vibeAudio');
+            audio.play();
+
             document.getElementById('ui').style.display='none';
             document.getElementById('lyrics-box').style.display='block';
             
             setInterval(() => {
-                document.getElementById('lyrics-box').innerText = jokes[jIdx];
-                jIdx = (jIdx + 1) % jokes.length;
+                document.getElementById('lyrics-box').innerText = funnyWords[index];
+                index = (index + 1) % funnyWords.length;
             }, 4000);
             
-            draw();
+            drawStars();
         }
 
-        function draw() {
+        function drawStars() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00ffcc";
+            ctx.fillStyle = "#00d2ff";
             for(let i=0; i<10; i++) {
-                ctx.fillText("❤️ Bakr", Math.random()*canvas.width, Math.random()*canvas.height);
+                ctx.beginPath();
+                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1, 0, Math.PI*2);
+                ctx.fill();
             }
-            requestAnimationFrame(draw);
+            requestAnimationFrame(drawStars);
         }
     </script>
 </body>
