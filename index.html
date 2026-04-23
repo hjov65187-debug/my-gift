@@ -13,11 +13,11 @@ button{padding:12px 50px;background:#ff007f;color:#fff;border:none;border-radius
 canvas{display:block;position:fixed;top:0;left:0;z-index:1}
 #countdown,#final-wrap,#big-words-wrap{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:300}
 #countdown{font-size:180px;color:#ff007f;font-weight:900}
-#final-wrap{display:none;flex-direction:column;background:rgba(0,0,0,0.98);pointer-events:auto}
+#final-wrap{display:none;flex-direction:column;background:rgba(0,0,0,0.95);pointer-events:auto}
 .msg-content{max-width:85%;text-align:center;font-size:35px;text-shadow:0 0 20px #ff007f}
 #big-words-wrap{display:none;z-index:250;pointer-events:none}
-.big-word{font-size:100px;font-weight:900;color:#ff1a75;text-shadow:0 0 40px #ff1a75;text-align:center;animation:fadeEffect 4s infinite}
-@keyframes fadeEffect{0%,100%{opacity:0;transform:scale(0.9)}50%{opacity:1;transform:scale(1)}}
+.big-word{font-size:60px;font-weight:900;color:#ff1a75;text-shadow:0 0 40px #ff1a75;text-align:center;animation:fadeEffect 4s infinite;padding:20px}
+@keyframes fadeEffect{0%,100%{opacity:0;transform:scale(0.8)}50%{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body>
@@ -26,12 +26,12 @@ canvas{display:block;position:fixed;top:0;left:0;z-index:1}
 <div id="big-words-wrap"><div class="big-word" id="big-word-text"></div></div>
 
 <audio id="bgMusic" preload="auto">
-    <source src="https://files.catbox.moe/606v9p.mp3" type="audio/mpeg">
+    <source src="https://files.catbox.moe/p4bwnh.mp3" type="audio/mpeg">
 </audio>
 
 <div id="final-wrap">
-    <div class="msg-content">أجمل صدفة في حياتي للأبد! ❤️😉</div>
-    <div style="font-size:100px;margin-top:20px">❤️😉</div>
+    <div class="msg-content">أنا فعلاً عرفت أختار ❤️😉</div>
+    <div style="font-size:100px;margin-top:20px">❤️</div>
 </div>
 
 <div id="ui">
@@ -46,63 +46,64 @@ canvas{display:block;position:fixed;top:0;left:0;z-index:1}
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight; canvas.width = window.innerWidth;
-const words = ["❤️", "😉", "Bakr", "حب"];
+const words = ["❤️", "😉", "Bakr", "أمان"];
 const bigWords = [
-    "يا أجمل حاجة 😉", 
-    "في حياتي ❤️", 
-    "أنتي وبس ✨", 
-    "وفيها طمأنينة تخلي القلب جنون", 
-    "مكانك جوه النني", 
-    "أنتي أغلى ما عندي 😉"
+    "عليك عيون 😉",
+    "لا بتنافق ولا بتخون ❤️",
+    "وفيها من الأمان مخزون ✨",
+    "وفيها من الجمال أسرار",
+    "عليك كلام يمشي الحزن",
+    "يطمن قلبي يرجع خام",
+    "فكون أنا وإنت كالأطفال",
+    "عليك سلام يقويني ❤️",
+    "في طاقة تزقني لقدام",
+    "وبيها بكمل المشوار",
+    "أشوفك أروق وأحس براحة ✨",
+    "أنا فعلاً عرفت أختار 😉"
 ];
-const fontSize = 18;
 const columns = Array(Math.floor(canvas.width / 35)).fill(1);
-let anim, bigAnim, bIdx = 0;
+let bIdx = 0;
 
 function draw() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ff007f22"; ctx.font = fontSize + "px 'Cairo'";
+  ctx.fillStyle = "#ff007f22"; ctx.font = "18px 'Cairo'";
   columns.forEach((y, i) => {
     ctx.fillText(words[Math.floor(Math.random() * words.length)], i * 35, y);
-    if (y > 600 + Math.random() * 10000) columns[i] = 0; else columns[i] = y + fontSize + 5;
+    if (y > canvas.height + Math.random() * 10000) columns[i] = 0; else columns[i] = y + 25;
   });
 }
 
 function updateBigWord() {
-  if(bIdx < bigWords.length) document.getElementById('big-word-text').innerText = bigWords[bIdx++];
+  if(bIdx < bigWords.length) {
+    document.getElementById('big-word-text').innerText = bigWords[bIdx++];
+  }
 }
 
 function go() {
   if(document.getElementById('p').value=="2009") {
     const music = document.getElementById('bgMusic');
-    // تشغيل الصوت مع معالجة حظر المتصفح
-    music.play().then(() => { console.log("Audio playing"); })
-    .catch(() => { 
-        console.log("Fallback: manual playback required.");
-        music.play();
+    music.play().catch(() => {
+        window.addEventListener('click', () => music.play(), {once: true});
     });
-
+    
     document.getElementById('ui').style.display='none';
     const cd = document.getElementById('countdown');
     const v = ["3", "2", "1"]; let i = 0;
     cd.style.display = 'flex';
+    
     const itv = setInterval(() => {
       cd.innerText = v[i++];
       if(i > 3) {
         clearInterval(itv); cd.style.display = 'none';
-        anim = setInterval(draw, 60);
+        setInterval(draw, 60);
         document.getElementById('big-words-wrap').style.display = 'flex';
-        
         updateBigWord();
-        // التوقيت متظبط (4 ثواني) لتوزيع الكلمات على دقيقة ونصف
-        bigAnim = setInterval(updateBigWord, 4000); 
+        setInterval(updateBigWord, 4200); // التوقيت المظبوط للكاريوكي
         
-        // وقت العرض الإجمالي: 90 ثانية (دقيقة ونصف)
         setTimeout(() => {
-          clearInterval(anim); clearInterval(bigAnim);
           document.getElementById('big-words-wrap').style.display = 'none';
           document.getElementById('final-wrap').style.display = 'flex';
-        }, 90000); 
+        }, 120000); // الموقع شغال لمدة دقيقتين
       }
     }, 1000);
   } else { alert("الباسورد غلط!"); }
