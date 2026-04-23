@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بكر بيغزلك مرة واحدة 😉✨</title>
+    <title>Bakr Original 3D ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Cairo', sans-serif; }
         #overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.95); z-index: 10; color: white; text-align: center;
+            background: rgba(0,0,0,0.9); z-index: 10; color: white; text-align: center;
         }
         button {
             padding: 15px 50px; font-size: 22px; cursor: pointer; border-radius: 50px;
@@ -19,17 +19,18 @@
         }
         #lyrics-box {
             display: none; position: fixed; z-index: 5; text-align: center; width: 90%;
-            color: #fff; font-size: 38px; font-weight: 900; text-shadow: 0 0 15px #00d2ff;
-            bottom: 12%; animation: floatText 6s infinite;
+            color: #fff; font-size: 38px; font-weight: 900; 
+            text-shadow: 0 0 20px #00d2ff, 0 0 40px #aa00ff;
+            bottom: 15%; animation: smoothFade 8s infinite;
         }
-        @keyframes floatText { 0%, 100% { opacity: 0; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
+        @keyframes smoothFade { 0%, 100% { opacity: 0; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="overlay">
-        <h1 style="color:#00d2ff">عالم بكر الـ 3D 😉✨</h1>
-        <p>استعد لأجمد روقان ومغازلة (مرة واحدة بس)</p>
+        <h1 style="color:#00d2ff">عالم بكر الأصلي ✨</h1>
+        <p>الألوان والموسيقى والكلام.. كله متظبط 😉</p>
         <button onclick="start()">دخول يا بقر قلبي ❤️</button>
     </div>
 
@@ -38,7 +39,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -50,10 +51,10 @@
             "يا مساء العسل.. على اللي شاغل البال ومخليني أهبل 😂",
             "بكرة نبني عشنا.. ونآكل ملوخية في بيتنا 😉🏠",
             "أنتِ النسخة الأصلية.. والباقي كله تقليد 😉",
-            "خلاص كدة.. ده كان كل اللي عندي يا قمر ❤️" // الجملة الأخيرة عشان يعرف إنها خلصت
+            "خلاص كدة.. نورتي عالم بكر يا قمر ❤️"
         ];
 
-        let scene, camera, renderer, globe, starGroup, textInterval;
+        let scene, camera, renderer, globe, textInterval;
         let lineIdx = 0;
 
         function start() {
@@ -62,20 +63,16 @@
             document.getElementById('lyrics-box').style.display = 'block';
             document.getElementById('lyrics-box').innerText = flirtLines[lineIdx];
 
-            // تبديل الكلام كل 7.5 ثواني
+            // تبديل الكلام كل 8 ثواني (سرعة متوسطة)
             textInterval = setInterval(() => {
                 lineIdx++;
                 if(lineIdx < flirtLines.length) {
                     document.getElementById('lyrics-box').innerText = flirtLines[lineIdx];
                 } else {
-                    // الكلام خلص، وقف التبديل بس سيب الصفحة والـ 3D
                     clearInterval(textInterval);
-                    document.getElementById('lyrics-box').innerText = ""; // مسح الكلام
                     document.getElementById('lyrics-box').style.display = 'none';
-                    // لو عايز توقف الموسيقى برضه، فعل السطر اللي جاي
-                    // document.getElementById('bgMusic').pause();
                 }
-            }, 7500); // 7.5 ثواني عشان يقعد دقيقة كاملة (8 جمل)
+            }, 8000); 
 
             init3D();
         }
@@ -89,42 +86,37 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // إنشاء الكرة الأرضية الكبيرة اللي في الفيديو
-            let globeGeo = new THREE.SphereGeometry(15, 32, 32);
-            let globeMat = new THREE.MeshBasicMaterial({ color: 0x00d2ff, wireframe: true, transparent: true, opacity: 0.6 });
+            // الكرة الـ 3D بألوان الفيديو الأصلية (أزرق وبنفسجي)
+            let globeGeo = new THREE.SphereGeometry(16, 32, 32);
+            let globeMat = new THREE.MeshBasicMaterial({ 
+                color: 0x00d2ff, // لون أزرق سماوي نيون
+                wireframe: true, 
+                transparent: true, 
+                opacity: 0.5 
+            });
             globe = new THREE.Mesh(globeGeo, globeMat);
+            
+            // إضافة هالة بنفسجية داخلية زي الفيديو
+            let innerGeo = new THREE.SphereGeometry(15.5, 32, 32);
+            let innerMat = new THREE.MeshBasicMaterial({ color: 0xaa00ff, transparent: true, opacity: 0.2 });
+            let innerSphere = new THREE.Mesh(innerGeo, innerMat);
+            globe.add(innerSphere);
+            
             scene.add(globe);
 
-            // إضافة الصور ككرات صغيرة بتلف حوالين الكرة الأرضية
-            const loader = new THREE.TextureLoader();
-            const photoFiles = ['1.jpg', '2.jpg', '3.jpg']; // الصور اللي هترفعها
-
-            photoFiles.forEach((file) => {
-                loader.load(file, (texture) => {
-                    const geometry = new THREE.SphereGeometry(4, 32, 32);
-                    const material = new THREE.MeshBasicMaterial({ map: texture });
-                    const photo = new THREE.Mesh(geometry, material);
-                    photo.position.set(Math.random()*40-20, Math.random()*40-20, Math.random()*40-20);
-                    photo.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
-                    globe.add(photo); // إضافة الصور للكرة الأرضية عشان تلف معاها
-                });
-            });
-
-            // نجوم الخلفية
-            starGroup = new THREE.Group();
+            // النجوم الكثيفة في الخلفية
             const starGeo = new THREE.BufferGeometry();
             const starPos = [];
-            for(let i=0; i<6000; i++) {
+            for(let i=0; i<7000; i++) {
                 starPos.push(Math.random()*800-400, Math.random()*800-400, Math.random()*800-400);
             }
             starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            starGroup.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.5})));
-            scene.add(starGroup);
+            scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.6})));
 
             function animate() {
                 requestAnimationFrame(animate);
-                globe.rotation.y += 0.003; // دوران الكرة الأرضية والصور
-                starGroup.rotation.y += 0.0005; // دوران نجوم الخلفية ببطء شديد
+                globe.rotation.y += 0.004; 
+                globe.rotation.z += 0.002;
                 renderer.render(scene, camera);
             }
             animate();
