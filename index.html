@@ -2,7 +2,7 @@
 <html lang="en" class="notranslate" translate="no">
 <head>
 <meta charset="UTF-8"><meta name="google" content="notranslate"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>عالم Bakr الخاص ✨</title>
+<title>عالم Bakr ✨</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
 body{margin:0;overflow:hidden;background:#000;font-family:'Cairo',sans-serif;color:#fff}
@@ -14,36 +14,29 @@ canvas{display:block;position:fixed;top:0;left:0;z-index:1}
 #countdown,#final-wrap,#big-words-wrap{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:300}
 #countdown{font-size:180px;color:#ff007f;font-weight:900}
 #final-wrap{display:none;flex-direction:column;background:rgba(0,0,0,0.98);pointer-events:auto}
-.msg-content{max-width:85%;text-align:center;line-height:1.5;font-size:35px;text-shadow:0 0 20px #ff007f}
+.msg-content{max-width:85%;text-align:center;font-size:35px;text-shadow:0 0 20px #ff007f}
 #big-words-wrap{display:none;z-index:250;pointer-events:none}
-.big-word{font-size:100px;font-weight:900;color:#ff1a75;text-shadow:0 0 40px #ff1a75;text-align:center;animation:fadeEffect 3.5s infinite}
-@keyframes fadeEffect{0%,100%{opacity:0;transform:scale(0.9)}50%{opacity:1;transform:scale(1)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.big-word{font-size:100px;font-weight:900;color:#ff1a75;text-shadow:0 0 40px #ff1a75;text-align:center;animation:fadeEffect 5s infinite}
+@keyframes fadeEffect{0%,100%{opacity:0;transform:scale(0.85)}50%{opacity:1;transform:scale(1)}}
 </style>
 </head>
-<body class="notranslate">
+<body>
 <canvas id="matrix"></canvas>
 <div id="countdown"></div>
 <div id="big-words-wrap"><div class="big-word" id="big-word-text"></div></div>
 
-<audio id="bgMusic">
+<audio id="bgMusic" preload="auto">
     <source src="https://f.top4top.io/m_22453v7w91.mp3" type="audio/mpeg">
 </audio>
 
 <div id="final-wrap">
-    <div class="msg-content">
-        عليك عيون لا بتنافق ولا بتخون 😉❤️<br>
-        مكانك جوه النني.. أنتي أغلى ما عندي..<br>
-        بحبك يا أجمل واحدة في الدنيا للأبد! ❤️😉
-    </div>
-    <div style="font-size:100px;animation:pulse 1s infinite;margin-top:20px">❤️😉</div>
-    <br><button onclick="location.reload()" style="background:#222;font-size:14px">إغلاق</button>
+    <div class="msg-content">عليك عيون لا بتنافق ولا بتخون ❤️😉</div>
+    <div style="font-size:100px;margin-top:20px">❤️😉</div>
 </div>
 
 <div id="ui">
     <div id="box">
-        <h1 style="color:#ff007f;font-size:28px">عالم Bakr ✨</h1>
-        <p style="color:#888;margin-bottom:20px">الباسورد يا ست البنات 😉</p>
+        <h1 style="color:#ff007f">عالم Bakr ✨</h1>
         <input type="number" id="p" placeholder="2009"><br>
         <button onclick="go()">دخول ❤️</button>
     </div>
@@ -53,42 +46,34 @@ canvas{display:block;position:fixed;top:0;left:0;z-index:1}
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight; canvas.width = window.innerWidth;
-
-const words = ["❤️", "😉", "Bakr", "Love"];
-// كلمات الأغنية بالترتيب الحرفي
+const words = ["❤️", "😉", "Bakr"];
 const bigWords = [
-    "عليك عيون 😉",
-    "لا بتنافق ❤️",
-    "ولا بتخون ✨",
-    "فيها طمأنينة",
-    "تخلي القلب في جنون",
-    "وعليك ساعة",
-    "تخلي الوقت مش بيعدي",
-    "مكانك جوه النني",
-    "أنتي أغلى ما عندي 😉"
+    "عليك عيون 😉", 
+    "لا بتنافق ولا بتخون ❤️", 
+    "وفيها طمأنينة ✨", 
+    "تخلي القلب في جنون", 
+    "وعليك ساعة", 
+    "تخلي الوقت مش بيعدي", 
+    "مكانك جوه النني", 
+    "أنتي أغلى ما عندي 😉",
+    "عليك عيون ❤️",
+    "لا بتنافق ولا بتخون 😉"
 ];
-const fontSize = 18;
 const columns = Array(Math.floor(canvas.width / 35)).fill(1);
 let anim, bigAnim, bIdx = 0;
 
 function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ff007f22"; 
-  ctx.font = fontSize + "px 'Cairo'";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#ff007f22"; ctx.font = "18px 'Cairo'";
   columns.forEach((y, i) => {
-    const txt = words[Math.floor(Math.random() * words.length)];
-    ctx.fillText(txt, i * 35, y);
-    if (y > 600 + Math.random() * 10000) columns[i] = 0;
-    else columns[i] = y + fontSize + 5;
+    ctx.fillText(words[Math.floor(Math.random() * words.length)], i * 35, y);
+    if (y > 600 + Math.random() * 10000) columns[i] = 0; else columns[i] = y + 25;
   });
 }
 
 function updateBigWord() {
-  if(bIdx < bigWords.length) {
-    document.getElementById('big-word-text').innerText = bigWords[bIdx];
-    bIdx++;
-  }
+  document.getElementById('big-word-text').innerText = bigWords[bIdx];
+  bIdx = (bIdx + 1) % bigWords.length;
 }
 
 function go() {
@@ -100,26 +85,24 @@ function go() {
     const cd = document.getElementById('countdown');
     const v = ["3", "2", "1"]; let i = 0;
     cd.style.display = 'flex';
-    
     const itv = setInterval(() => {
       cd.innerText = v[i++];
       if(i > 3) {
         clearInterval(itv); cd.style.display = 'none';
         anim = setInterval(draw, 60);
         document.getElementById('big-words-wrap').style.display = 'flex';
+        updateBigWord();
+        bigAnim = setInterval(updateBigWord, 5000); // توزيع الكلمات على دقيقة ونصف
         
-        updateBigWord(); 
-        // التوقيت ده (3.5 ثانية) هو الأقرب لسرعة غناء أحمد سعد في الكوبليهات دي
-        bigAnim = setInterval(updateBigWord, 3500); 
-        
+        // وقت العرض الإجمالي: 90 ثانية (دقيقة ونصف)
         setTimeout(() => {
           clearInterval(anim); clearInterval(bigAnim);
           document.getElementById('big-words-wrap').style.display = 'none';
           document.getElementById('final-wrap').style.display = 'flex';
-        }, 40000); 
+        }, 90000); 
       }
     }, 1000);
-  } else { alert("الباسورد غلط يا قمر 😉"); }
+  } else { alert("الباسورد غلط!"); }
 }
 </script>
 </body>
