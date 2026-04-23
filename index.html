@@ -3,183 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روقان و هبد ✨</title>
+    <title>روقان بكر الأصلي ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
-        
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: #000;
-            font-family: 'Cairo', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        /* واجهة الدخول */
-        #ui-layer {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 40px;
-            border-radius: 40px;
-            border: 3px solid #7000ff;
-            box-shadow: 0 0 30px #7000ff;
-        }
-
-        h1 { color: #fff; margin-bottom: 20px; font-size: 28px; }
-        
-        input {
-            padding: 12px;
-            width: 150px;
-            border-radius: 15px;
-            border: 2px solid #7000ff;
-            background: transparent;
-            color: #fff;
-            font-size: 20px;
-            text-align: center;
-            outline: none;
-            margin-bottom: 20px;
-        }
-
-        button {
-            padding: 12px 40px;
-            background: #7000ff;
-            color: #fff;
-            border: none;
-            border-radius: 15px;
-            font-size: 22px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover { transform: scale(1.1); box-shadow: 0 0 20px #7000ff; }
-
-        /* منطقة الكلام */
-        #lyrics-box {
-            display: none;
-            position: fixed;
-            z-index: 5;
-            text-align: center;
-            width: 90%;
-            pointer-events: none;
-        }
-
-        .funny-text {
-            font-size: 45px;
-            color: #fff;
-            text-shadow: 0 0 20px #7000ff, 0 0 40px #ff007f;
-            animation: slideUp 4s infinite;
-        }
-
-        @keyframes slideUp {
-            0% { transform: translateY(50px); opacity: 0; }
-            20% { transform: translateY(0); opacity: 1; }
-            80% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-50px); opacity: 0; }
-        }
+        body { margin:0; overflow:hidden; background:#050505; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
+        canvas { position:fixed; top:0; left:0; z-index:1; }
+        #ui { position:relative; z-index:10; text-align:center; background:rgba(0,0,0,0.9); padding:40px; border-radius:30px; border:3px solid #00ffcc; box-shadow:0 0 30px #00ffcc66; }
+        button { padding:15px 50px; background:#00ffcc; color:#000; border:none; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; box-shadow:0 5px 15px #00ffcc; }
+        #lyrics-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#fff; font-size:45px; text-shadow:0 0 20px #00ffcc; }
+        .fade { animation: fadeEffect 4s infinite; }
+        @keyframes fadeEffect { 0%,100% {opacity:0; transform:scale(0.9);} 50% {opacity:1; transform:scale(1.1);} }
     </style>
 </head>
 <body>
 
-    <canvas id="bgCanvas"></canvas>
+    <canvas id="matrix"></canvas>
 
-    <audio id="audioTrack" loop>
-        <source src="https://files.catbox.moe/k2h67m.mp3" type="audio/mpeg">
+    <audio id="track" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="ui-layer">
-        <h1>جاهز للروقان؟ ✨</h1>
-        <input type="number" id="pin" placeholder="1234">
-        <br>
-        <button onclick="unlock()">دخول ❤️</button>
+    <div id="ui">
+        <h1 style="color:#00ffcc">عالم بكر ✨</h1>
+        <p style="color:#fff">دوس يا نجم عشان تسمع الروقان</p>
+        <button onclick="playNow()">تشغيل 🔥</button>
     </div>
 
-    <div id="lyrics-box">
-        <div class="funny-text" id="text-display"></div>
-    </div>
+    <div id="lyrics-box" class="fade"></div>
 
     <script>
-        const canvas = document.getElementById('bgCanvas');
+        const jokes = [
+            "أنتِ زي كارت الشحن.. بشوفك بترد فيا الروح 📱",
+            "لو الحب حواوشي.. فأنتِ الرغيف كله 🌯",
+            "يا مساء الزبادي.. يا اللي حبك في قلبي مش عادي 🍦",
+            "أنتِ النسخة الأصلية.. والباقي صيني مضروب 💎",
+            "يا واد يا مـربـى.. في حبك قلبي اتدبى 😂",
+            "عنيكي زي الـ GPS.. تيهتيني وراكي ومستسلم 📍"
+        ];
+        
+        let jIdx = 0;
+        const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // كلام هبد مصري بس "كيوت" شوية
-        const jokes = [
-            "أنتِ زي الشاحن الأصلي.. ماقدرش أستغنى عنك 🔋",
-            "لو الحب حتة قشطة.. فأنتِ علبة كاملة 🍯",
-            "يا واد يا مربى.. قلبي في حبك اتدبى 😂",
-            "عنيكي زي الـ Wi-Fi.. أول ما بشوفهم بلقت علطول 📶",
-            "أنا قلبي مكرونة وأنتِ الصلصة بتاعتي 🍝",
-            "يا مساء البطاطس.. يا اللي حبك في قلبي غاطس 🥔",
-            "أنتِ القمر.. بس النسخة اللي بتلبس كوتشي 🌙",
-            "لو كنتِ شوكولاتة.. كنت أكلتك من غير ما أقول لحد 🍫",
-            "الحب ده بهدلة.. بس معاكي زي العسل والله 😍",
-            "أنا من غيرك زي الموبايل من غير سكرينة.. مكسور 💔"
-        ];
-
-        let index = 0;
-
-        // تأثير دوائر النيون في الخلفية
-        const circles = Array(20).fill().map(() => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            r: Math.random() * 4 + 1,
-            dx: (Math.random() - 0.5) * 2,
-            dy: (Math.random() - 0.5) * 2
-        }));
-
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        function playNow() {
+            const music = document.getElementById('track');
+            music.play(); // دي الحركة اللي بتفك الحظر بتاع المتصفح
             
-            circles.forEach(c => {
-                ctx.beginPath();
-                ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-                ctx.fillStyle = '#7000ff';
-                ctx.fill();
-                c.x += c.dx;
-                c.y += c.dy;
-
-                if (c.x < 0 || c.x > canvas.width) c.dx *= -1;
-                if (c.y < 0 || c.y > canvas.height) c.dy *= -1;
-            });
-            requestAnimationFrame(animate);
+            document.getElementById('ui').style.display='none';
+            document.getElementById('lyrics-box').style.display='block';
+            
+            setInterval(() => {
+                document.getElementById('lyrics-box').innerText = jokes[jIdx];
+                jIdx = (jIdx + 1) % jokes.length;
+            }, 4000);
+            
+            draw();
         }
 
-        function unlock() {
-            // الباسورد هو 1234 (تقدر تغيره)
-            if(document.getElementById('pin').value == "1234") {
-                document.getElementById('ui-layer').style.display = 'none';
-                document.getElementById('lyrics-box').style.display = 'block';
-                
-                const music = document.getElementById('audioTrack');
-                music.play();
-                
-                animate();
-                changeText();
-                setInterval(changeText, 4000);
-            } else {
-                alert("الباسورد غلط يا نجم! جرب 1234 😉");
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00ffcc";
+            for(let i=0; i<10; i++) {
+                ctx.fillText("❤️ Bakr", Math.random()*canvas.width, Math.random()*canvas.height);
             }
-        }
-
-        function changeText() {
-            const display = document.getElementById('text-display');
-            display.innerText = jokes[index];
-            index = (index + 1) % jokes.length;
+            requestAnimationFrame(draw);
         }
     </script>
 </body>
