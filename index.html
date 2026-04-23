@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم بكر الرايق ✨</title>
+    <title>روقان بكر ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
         body { margin:0; overflow:hidden; background:#000; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
         canvas { position:fixed; top:0; left:0; z-index:1; }
-        #ui { position:relative; z-index:10; text-align:center; background:rgba(0,0,0,0.95); padding:40px; border-radius:30px; border:2px solid #00d2ff; box-shadow:0 0 40px #00d2ff66; }
-        button { padding:15px 60px; background:#00d2ff; color:#000; border:none; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; box-shadow:0 0 15px #00d2ff; }
-        #lyrics-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#fff; font-size:45px; text-shadow:0 0 25px #00d2ff; animation: glow 4s infinite; }
-        @keyframes glow { 0%,100% {opacity:0; transform:scale(0.8); filter:blur(5px);} 50% {opacity:1; transform:scale(1.1); filter:blur(0);} }
+        #ui { position:relative; z-index:10; text-align:center; background:rgba(10,10,10,0.95); padding:40px; border-radius:30px; border:2px solid #00d2ff; box-shadow:0 0 40px #00d2ff; }
+        button { padding:15px 60px; background:#00d2ff; color:#000; border:none; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; transition:0.3s; }
+        button:hover { transform:scale(1.1); background:#fff; }
+        #lyrics-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#fff; font-size:45px; text-shadow:0 0 25px #00d2ff; animation: smoothFade 4s infinite; }
+        @keyframes smoothFade { 0%,100% {opacity:0; transform:scale(0.9);} 50% {opacity:1; transform:scale(1);} }
     </style>
 </head>
 <body>
@@ -19,12 +20,12 @@
     <canvas id="stars"></canvas>
 
     <audio id="vibeAudio" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
     </audio>
 
     <div id="ui">
         <h1 style="color:#00d2ff">عالم بكر ✨</h1>
-        <p style="color:#eee">دوس دخول.. الأغنية المرة دي مختلفة 😉</p>
+        <p style="color:#eee">الموسيقى المرة دي "خيال" .. دوس دخول</p>
         <button onclick="startVibe()">دخول ❤️</button>
     </div>
 
@@ -37,7 +38,8 @@
             "يا مساء البطاطس.. يا اللي حبك في قلبي غاطس 🥔",
             "أنا قلبي مكرونة وأنتِ الصلصة بتاعتي 🍝",
             "يا واد يا مربى.. في حبك قلبي اتدبى 😍",
-            "عنيكي فيها كهربا.. كهروباء السد العالي ⚡"
+            "عنيكي فيها كهربا.. كهروباء السد العالي ⚡",
+            "أنتِ زي الشاحن الأصلي.. ماقدرش أستغنى عنك 🔋"
         ];
         
         let index = 0;
@@ -65,9 +67,9 @@
             ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#00d2ff";
-            for(let i=0; i<10; i++) {
+            for(let i=0; i<12; i++) {
                 ctx.beginPath();
-                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1, 0, Math.PI*2);
+                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1.2, 0, Math.PI*2);
                 ctx.fill();
             }
             requestAnimationFrame(drawStars);
