@@ -3,36 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم بكر الرومانسي 3D ✨</title>
+    <title>Aesthetic Bakr Vibe ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Cairo', sans-serif; }
+        
+        /* خلفية بلور متحركة ببطء (Aesthetic Gradient) */
+        #bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(120deg, #1d3557, #457b9d, #a8dadc, #f1faee);
+            background-size: 400% 400%; animation: gradientBg 15s ease infinite; filter: blur(50px);
+            z-index: -1;
+        }
+        @keyframes gradientBg { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
         #overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.9); z-index: 20; color: white; text-align: center;
+            background: rgba(0,0,0,0.8); z-index: 20; color: white; text-align: center;
         }
         button {
             padding: 15px 50px; font-size: 22px; cursor: pointer; border-radius: 50px;
-            border: 2px solid #ff1493; background: transparent; color: #ff1493;
-            box-shadow: 0 0 20px #ff1493; transition: 0.3s; font-weight: bold;
+            border: 2px solid #00ffff; background: transparent; color: #00ffff;
+            box-shadow: 0 0 20px #00ffff; transition: 0.3s; font-weight: bold;
         }
         #lyrics-box {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 15; text-align: center; width: 80%;
-            color: #fff; font-size: 32px; font-weight: 900; 
-            text-shadow: 0 0 20px #ff1493, 0 0 40px #000;
+            color: #fff; font-size: 35px; font-weight: 900; 
+            text-shadow: 0 0 20px #00ffff, 0 0 40px #000;
             pointer-events: none; animation: smoothFade 8s infinite;
         }
-        @keyframes smoothFade { 0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } }
+        @keyframes smoothFade { 0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); filter: blur(5px); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); filter: blur(0); } }
     </style>
 </head>
 <body>
 
+    <div id="bg"></div>
+
     <div id="overlay">
-        <h1 style="color:#ff1493">عالم بكر الخاص ❤️</h1>
-        <p>القلب جوه الكوكب مستنيك 😉</p>
-        <button onclick="start()">دخول يا بقر قلبي ❤️</button>
+        <h1 style="color:#00ffff">عالم بكر الخاص ✨</h1>
+        <p>القلب الأزرق السحري مستنيك 😉</p>
+        <button onclick="start()">دخول للروقان 😉✨</button>
     </div>
 
     <div id="lyrics-box"></div>
@@ -47,10 +59,12 @@
             "لو الحب طعمية فأنتِ السندوتش كله يا روحي 😉",
             "يا مساء العسل.. على اللي شاغل البال ومخليني أهبل 😂",
             "بكرة نبني عشنا.. ونآكل ملوخية في بيتنا 😉🏠",
-            "أنتِ النسخة الأصلية.. والباقي كله تقليد 😉"
+            "أنتِ النسخة الأصلية.. والباقي كله تقليد 😉",
+            "خلاص كدة.. ده كان كل اللي عندي يا قمر ❤️",
+            "1.1.2009 ✨" // التاريخ في النهاية
         ];
 
-        let scene, camera, renderer, globe, heart, extraHearts = [];
+        let scene, camera, renderer, mainHeart, sparkles = [];
         let lineIdx = 0;
 
         function start() {
@@ -62,7 +76,10 @@
                 lineIdx++;
                 if(lineIdx < flirtLines.length) {
                     document.getElementById('lyrics-box').innerText = flirtLines[lineIdx];
+                } else if(lineIdx == flirtLines.length - 1) {
+                   // التاريخ يفضل ظاهر في النهاية
                 } else {
+                    document.getElementById('lyrics-box').innerText = "";
                     document.getElementById('lyrics-box').style.display = 'none';
                 }
             }, 8000); 
@@ -75,58 +92,62 @@
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 50;
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Alpha لخلفية شفافة
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // 1. الكوكب (الكرة الخارجية)
-            let globeGeo = new THREE.SphereGeometry(20, 64, 64);
-            let globeMat = new THREE.MeshBasicMaterial({ color: 0xff1493, wireframe: true, transparent: true, opacity: 0.3 });
-            globe = new THREE.Mesh(globeGeo, globeMat);
-            scene.add(globe);
-
-            // 2. القلب الـ 3D اللي جوه الكوكب
-            const heartShape = new THREE.Shape();
-            heartShape.moveTo(0, 0);
-            heartShape.bezierCurveTo(0, -3, -5, -15, -20, -15);
-            heartShape.bezierCurveTo(-35, -15, -35, 7, -35, 7);
-            heartShape.bezierCurveTo(-35, 16, -25, 25, 0, 35);
-            heartShape.bezierCurveTo(25, 25, 35, 16, 35, 7);
-            heartShape.bezierCurveTo(35, 7, 35, -15, 20, -15);
-            heartShape.bezierCurveTo(10, -15, 0, -3, 0, 0);
-
-            const extrudeSettings = { depth: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
-            const heartGeo = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
-            const heartMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            heart = new THREE.Mesh(heartGeo, heartMat);
-            heart.scale.set(0.4, 0.4, 0.4);
-            heart.rotation.z = Math.PI;
-            scene.add(heart);
-
-            // 3. قلوب بتطير في الخلفية
-            for(let i=0; i<20; i++) {
-                let smallHeart = new THREE.Mesh(heartGeo, new THREE.MeshBasicMaterial({ color: 0xff69b4, transparent: true, opacity: 0.6 }));
-                smallHeart.scale.set(0.1, 0.1, 0.1);
-                smallHeart.rotation.z = Math.PI;
-                smallHeart.position.set(Math.random()*200-100, Math.random()*200-100, Math.random()*100-150);
-                extraHearts.push(smallHeart);
-                scene.add(smallHeart);
+            // القلب الـ 3D الأزرق الطويل والمخرم
+            function createHeartShape() {
+                const heartShape = new THREE.Shape();
+                heartShape.moveTo(0, 0);
+                heartShape.bezierCurveTo(0, -3, -5, -15, -20, -15);
+                heartShape.bezierCurveTo(-35, -15, -35, 7, -35, 7);
+                heartShape.bezierCurveTo(-35, 16, -25, 25, 0, 35);
+                heartShape.bezierCurveTo(25, 25, 35, 16, 35, 7);
+                heartShape.bezierCurveTo(35, 7, 35, -15, 20, -15);
+                heartShape.bezierCurveTo(10, -15, 0, -3, 0, 0);
+                return heartShape;
             }
 
-            // نجوم
-            const starGeo = new THREE.BufferGeometry();
-            const starPos = [];
-            for(let i=0; i<5000; i++) {
-                starPos.push(Math.random()*1000-500, Math.random()*1000-500, Math.random()*1000-500);
+            const extrudeSettings = { depth: 2, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.5, bevelThickness: 0.5 };
+            const heartGeo = new THREE.ExtrudeGeometry(createHeartShape(), extrudeSettings);
+            const heartMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true, transparent: true, opacity: 0.9 });
+            mainHeart = new THREE.Group();
+
+            const largeHeart = new THREE.Mesh(heartGeo, heartMat);
+            largeHeart.scale.set(0.4, 0.6, 0.4); // ممطوط
+            largeHeart.rotation.z = Math.PI;
+            mainHeart.add(largeHeart);
+
+            // التخريم بقلوب صغيرة جواه
+            for(let i=0; i<10; i++) {
+                let punchHeart = new THREE.Mesh(heartGeo, heartMat);
+                punchHeart.scale.set(0.04, 0.04, 0.04);
+                punchHeart.rotation.z = Math.PI;
+                punchHeart.position.set(Math.random()*15-7.5, Math.random()*25-12.5, 0);
+                mainHeart.add(punchHeart);
             }
-            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.5})));
+            scene.add(mainHeart);
+
+            // بديل النجوم: نقط بتلمع (Sparkles) كثيفة
+            const sparkleGeo = new THREE.BufferGeometry();
+            const sparklePos = [];
+            const sparkleColors = [];
+            for(let i=0; i<7000; i++) {
+                sparklePos.push(Math.random()*600-300, Math.random()*600-300, Math.random()*600-300);
+                sparkleColors.push(0, 1, 1); // أزرق نيون
+            }
+            sparkleGeo.setAttribute('position', new THREE.Float32BufferAttribute(sparklePos, 3));
+            sparkleGeo.setAttribute('color', new THREE.Float32BufferAttribute(sparkleColors, 3));
+            sparkles = new THREE.Points(sparkleGeo, new THREE.PointsMaterial({color: 0x00ffff, size: 0.6, vertexColors: true, transparent: true, opacity: 0.7}));
+            scene.add(sparkles);
 
             function animate() {
                 requestAnimationFrame(animate);
-                globe.rotation.y += 0.005;
-                heart.rotation.y += 0.02;
-                extraHearts.forEach(h => { h.position.y += 0.1; if(h.position.y > 100) h.position.y = -100; });
+                mainHeart.rotation.y += 0.01;
+                // دوامة من الـ Sparkles حوالين القلب
+                sparkles.rotation.y += 0.005;
+                sparkles.rotation.x += 0.002;
                 renderer.render(scene, camera);
             }
             animate();
