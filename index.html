@@ -1,106 +1,185 @@
 <!DOCTYPE html>
-<html lang="en" class="notranslate" translate="no">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم Bakr ✨</title>
+    <title>روقان و هبد ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
-        body{margin:0;overflow:hidden;background:#000;font-family:'Cairo',sans-serif;color:#fff}
-        #ui{position:fixed;z-index:400;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
-        #box{background:rgba(10,10,10,0.98);padding:35px;border-radius:30px;border:2px solid #ff007f;text-align:center;box-shadow:0 0 50px #ff007f66}
-        input{padding:12px;width:160px;text-align:center;font-size:24px;border-radius:12px;border:1px solid #ff007f;background:#000;color:#ff007f;margin-bottom:20px;outline:none}
-        button{padding:12px 50px;background:#ff007f;color:#fff;border:none;border-radius:12px;cursor:pointer;font-weight:900;font-size:22px}
-        canvas{display:block;position:fixed;top:0;left:0;z-index:1}
-        #big-words-wrap{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:300;pointer-events:none}
-        .big-word{font-size:45px;font-weight:900;color:#ff1a75;text-shadow:0 0 40px #ff1a75;text-align:center;animation:fade 4.8s infinite;padding:25px;line-height:1.5}
-        @keyframes fade{0%,100%{opacity:0;transform:scale(0.85)}50%{opacity:1;transform:scale(1)}}
+        
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* واجهة الدخول */
+        #ui-layer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 40px;
+            border: 3px solid #7000ff;
+            box-shadow: 0 0 30px #7000ff;
+        }
+
+        h1 { color: #fff; margin-bottom: 20px; font-size: 28px; }
+        
+        input {
+            padding: 12px;
+            width: 150px;
+            border-radius: 15px;
+            border: 2px solid #7000ff;
+            background: transparent;
+            color: #fff;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 40px;
+            background: #7000ff;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { transform: scale(1.1); box-shadow: 0 0 20px #7000ff; }
+
+        /* منطقة الكلام */
+        #lyrics-box {
+            display: none;
+            position: fixed;
+            z-index: 5;
+            text-align: center;
+            width: 90%;
+            pointer-events: none;
+        }
+
+        .funny-text {
+            font-size: 45px;
+            color: #fff;
+            text-shadow: 0 0 20px #7000ff, 0 0 40px #ff007f;
+            animation: slideUp 4s infinite;
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(50px); opacity: 0; }
+            20% { transform: translateY(0); opacity: 1; }
+            80% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <canvas id="matrix"></canvas>
-    
-    <audio id="bgMusic" preload="auto" loop>
-        <source src="https://files.catbox.moe/606v9p.mp3" type="audio/mpeg">
+
+    <canvas id="bgCanvas"></canvas>
+
+    <audio id="audioTrack" loop>
+        <source src="https://files.catbox.moe/k2h67m.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="ui">
-        <div id="box">
-            <h1 style="color:#ff007f">عالم Bakr ✨</h1>
-            <input type="number" id="p" placeholder="2009">
-            <br>
-            <button onclick="go()">دخول ❤️</button>
-        </div>
+    <div id="ui-layer">
+        <h1>جاهز للروقان؟ ✨</h1>
+        <input type="number" id="pin" placeholder="1234">
+        <br>
+        <button onclick="unlock()">دخول ❤️</button>
     </div>
 
-    <div id="big-words-wrap"><div class="big-word" id="big-word-text"></div></div>
+    <div id="lyrics-box">
+        <div class="funny-text" id="text-display"></div>
+    </div>
 
     <script>
-        const canvas = document.getElementById("matrix");
-        const ctx = canvas.getContext("2d");
-        canvas.height = window.innerHeight;
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        // مطر القلوب والكلمات في الخلفية
-        const rainWords = ["❤️", "😉", "Bakr", "حب", "✨"];
-        const fontSize = 20;
-        const columns = Array(Math.floor(canvas.width / 30)).fill(1);
+        // كلام هبد مصري بس "كيوت" شوية
+        const jokes = [
+            "أنتِ زي الشاحن الأصلي.. ماقدرش أستغنى عنك 🔋",
+            "لو الحب حتة قشطة.. فأنتِ علبة كاملة 🍯",
+            "يا واد يا مربى.. قلبي في حبك اتدبى 😂",
+            "عنيكي زي الـ Wi-Fi.. أول ما بشوفهم بلقت علطول 📶",
+            "أنا قلبي مكرونة وأنتِ الصلصة بتاعتي 🍝",
+            "يا مساء البطاطس.. يا اللي حبك في قلبي غاطس 🥔",
+            "أنتِ القمر.. بس النسخة اللي بتلبس كوتشي 🌙",
+            "لو كنتِ شوكولاتة.. كنت أكلتك من غير ما أقول لحد 🍫",
+            "الحب ده بهدلة.. بس معاكي زي العسل والله 😍",
+            "أنا من غيرك زي الموبايل من غير سكرينة.. مكسور 💔"
+        ];
 
-        function drawRain() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+        let index = 0;
+
+        // تأثير دوائر النيون في الخلفية
+        const circles = Array(20).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 4 + 1,
+            dx: (Math.random() - 0.5) * 2,
+            dy: (Math.random() - 0.5) * 2
+        }));
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#ff007f33"; 
-            ctx.font = fontSize + "px 'Cairo'";
-            columns.forEach((y, i) => {
-                const text = rainWords[Math.floor(Math.random() * rainWords.length)];
-                ctx.fillText(text, i * 30, y);
-                if (y > canvas.height + Math.random() * 10000) columns[i] = 0;
-                else columns[i] = y + fontSize + 5;
+            
+            circles.forEach(c => {
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                ctx.fillStyle = '#7000ff';
+                ctx.fill();
+                c.x += c.dx;
+                c.y += c.dy;
+
+                if (c.x < 0 || c.x > canvas.width) c.dx *= -1;
+                if (c.y < 0 || c.y > canvas.height) c.dy *= -1;
             });
+            requestAnimationFrame(animate);
         }
 
-        // كلمات أغنية محمد سعيد - جمل متلاصقة
-        const lyrics = [
-            "وقالوا عليكي إن أنتِ عينيكي 😉",
-            "قاسية ومافيش فيها مكان ❤️",
-            "يمكن حبيتي ورحتي وجيتي ✨",
-            "واتنسيتي مع الأيام",
-            "وقالوا عليكي إن أنتِ بقيتي ❤️",
-            "حد ناسي لنفسه زمان",
-            "يمكن حبيتي ورحتي وجيتي ✨",
-            "واتنسيتي مع الأيام 😉",
-            "أنا فعلاً عرفت أختار ❤️"
-        ];
-        
-        let lIdx = 0;
-
-        function updateLyrics() {
-            if(lIdx < lyrics.length) {
-                document.getElementById('big-word-text').innerText = lyrics[lIdx++];
+        function unlock() {
+            // الباسورد هو 1234 (تقدر تغيره)
+            if(document.getElementById('pin').value == "1234") {
+                document.getElementById('ui-layer').style.display = 'none';
+                document.getElementById('lyrics-box').style.display = 'block';
+                
+                const music = document.getElementById('audioTrack');
+                music.play();
+                
+                animate();
+                changeText();
+                setInterval(changeText, 4000);
+            } else {
+                alert("الباسورد غلط يا نجم! جرب 1234 😉");
             }
         }
 
-        function go() {
-            if(document.getElementById('p').value=="2009") {
-                const music = document.getElementById('bgMusic');
-                
-                // تشغيل الصوت مع محاولة فك الحظر
-                music.play().catch(() => {
-                    // لو المتصفح حظر الصوت، هيشتغل مع أول لمسة بعد الضغط على الزرار
-                    console.log("Audio blocked, fallback to interaction");
-                    music.play();
-                });
-
-                document.getElementById('ui').style.display='none';
-                document.getElementById('big-words-wrap').style.display = 'flex';
-                
-                // تشغيل مطر الخلفية
-                setInterval(drawRain, 60);
-                
-                // تشغيل الكلمات بالتوقيت المظبوط
-                updateLyrics();
-                setInterval(updateLyrics, 4800); 
-            } else { alert("الباسورد غلط!"); }
+        function changeText() {
+            const display = document.getElementById('text-display');
+            display.innerText = jokes[index];
+            index = (index + 1) % jokes.length;
         }
     </script>
 </body>
