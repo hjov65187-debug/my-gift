@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bakr Original 3D ✨</title>
+    <title>عالم بكر الرومانسي ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Cairo', sans-serif; }
@@ -14,33 +14,29 @@
         }
         button {
             padding: 15px 50px; font-size: 22px; cursor: pointer; border-radius: 50px;
-            border: 2px solid #00d2ff; background: transparent; color: #00d2ff;
-            box-shadow: 0 0 20px #00d2ff; transition: 0.3s; font-weight: bold;
+            border: 2px solid #ff1493; background: transparent; color: #ff1493;
+            box-shadow: 0 0 20px #ff1493; transition: 0.3s; font-weight: bold;
         }
         #lyrics-box {
             display: none; position: fixed; z-index: 5; text-align: center; width: 90%;
-            color: #fff; font-size: 38px; font-weight: 900; 
-            text-shadow: 0 0 20px #00d2ff, 0 0 40px #aa00ff;
-            bottom: 15%; animation: smoothFade 8s infinite;
+            color: #fff; font-size: 35px; font-weight: 900; 
+            text-shadow: 0 0 15px #ff1493, 0 0 30px #8a2be2;
+            bottom: 15%; animation: loveFade 8s infinite;
         }
-        @keyframes smoothFade { 0%, 100% { opacity: 0; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1); } }
+        @keyframes loveFade { 0%, 100% { opacity: 0; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.05); } }
     </style>
 </head>
 <body>
 
     <div id="overlay">
-        <h1 style="color:#00d2ff">عالم بكر الأصلي ✨</h1>
-        <p>الألوان والموسيقى والكلام.. كله متظبط 😉</p>
-        <button onclick="start()">دخول يا بقر قلبي ❤️</button>
+        <h1 style="color:#ff1493">عالم بكر الخاص ❤️</h1>
+        <p>استعد لأجمد تجربة رمانسية (بدون موسيقى)</p>
+        <button onclick="start()">دخول يا بقر قلبي 😉</button>
     </div>
 
     <div id="lyrics-box"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
 
     <script>
         const flirtLines = [
@@ -50,26 +46,23 @@
             "لو الحب طعمية فأنتِ السندوتش كله يا روحي 😉",
             "يا مساء العسل.. على اللي شاغل البال ومخليني أهبل 😂",
             "بكرة نبني عشنا.. ونآكل ملوخية في بيتنا 😉🏠",
-            "أنتِ النسخة الأصلية.. والباقي كله تقليد 😉",
-            "خلاص كدة.. نورتي عالم بكر يا قمر ❤️"
+            "أنتِ النسخة الأصلية.. والباقي كله تقليد 😉"
         ];
 
-        let scene, camera, renderer, globe, textInterval;
+        let scene, camera, renderer, globe, starGroup;
         let lineIdx = 0;
 
         function start() {
-            document.getElementById('bgMusic').play();
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('lyrics-box').style.display = 'block';
             document.getElementById('lyrics-box').innerText = flirtLines[lineIdx];
 
-            // تبديل الكلام كل 8 ثواني (سرعة متوسطة)
-            textInterval = setInterval(() => {
+            // الكلام بيتبدل كل 8 ثواني (سرعة متوسطة)
+            setInterval(() => {
                 lineIdx++;
                 if(lineIdx < flirtLines.length) {
                     document.getElementById('lyrics-box').innerText = flirtLines[lineIdx];
                 } else {
-                    clearInterval(textInterval);
                     document.getElementById('lyrics-box').style.display = 'none';
                 }
             }, 8000); 
@@ -86,37 +79,37 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // الكرة الـ 3D بألوان الفيديو الأصلية (أزرق وبنفسجي)
-            let globeGeo = new THREE.SphereGeometry(16, 32, 32);
+            // الكرة الـ 3D الكبيرة بألوان الحب (أحمر وردي وبنفسجي)
+            let globeGeo = new THREE.SphereGeometry(18, 64, 64);
             let globeMat = new THREE.MeshBasicMaterial({ 
-                color: 0x00d2ff, // لون أزرق سماوي نيون
+                color: 0xff1493, // أحمر وردي فاقع (Deep Pink)
                 wireframe: true, 
                 transparent: true, 
-                opacity: 0.5 
+                opacity: 0.4 
             });
             globe = new THREE.Mesh(globeGeo, globeMat);
             
-            // إضافة هالة بنفسجية داخلية زي الفيديو
-            let innerGeo = new THREE.SphereGeometry(15.5, 32, 32);
-            let innerMat = new THREE.MeshBasicMaterial({ color: 0xaa00ff, transparent: true, opacity: 0.2 });
+            // إضافة كرة داخلية لونها بنفسجي هادي زي الفيديو
+            let innerGeo = new THREE.SphereGeometry(17.5, 32, 32);
+            let innerMat = new THREE.MeshBasicMaterial({ color: 0x8a2be2, transparent: true, opacity: 0.15 });
             let innerSphere = new THREE.Mesh(innerGeo, innerMat);
             globe.add(innerSphere);
             
             scene.add(globe);
 
-            // النجوم الكثيفة في الخلفية
+            // نجوم الخلفية كثيفة وتلمع
             const starGeo = new THREE.BufferGeometry();
             const starPos = [];
-            for(let i=0; i<7000; i++) {
+            for(let i=0; i<8000; i++) {
                 starPos.push(Math.random()*800-400, Math.random()*800-400, Math.random()*800-400);
             }
             starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.6})));
+            scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.4})));
 
             function animate() {
                 requestAnimationFrame(animate);
-                globe.rotation.y += 0.004; 
-                globe.rotation.z += 0.002;
+                globe.rotation.y += 0.003; 
+                globe.rotation.x += 0.001;
                 renderer.render(scene, camera);
             }
             animate();
