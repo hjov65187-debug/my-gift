@@ -3,76 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روقان بكر ✨</title>
+    <title>روقان Bakr ✨</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap');
         body { margin:0; overflow:hidden; background:#000; font-family:'Cairo',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
         canvas { position:fixed; top:0; left:0; z-index:1; }
-        #ui { position:relative; z-index:10; text-align:center; background:rgba(10,10,10,0.95); padding:40px; border-radius:30px; border:2px solid #00d2ff; box-shadow:0 0 40px #00d2ff; }
-        button { padding:15px 60px; background:#00d2ff; color:#000; border:none; border-radius:15px; font-size:24px; font-weight:900; cursor:pointer; transition:0.3s; }
-        button:hover { transform:scale(1.1); background:#fff; }
-        #lyrics-box { display:none; position:fixed; z-index:5; text-align:center; width:90%; color:#fff; font-size:45px; text-shadow:0 0 25px #00d2ff; animation: smoothFade 4s infinite; }
-        @keyframes smoothFade { 0%,100% {opacity:0; transform:scale(0.9);} 50% {opacity:1; transform:scale(1);} }
+        #ui { position:relative; z-index:10; text-align:center; background:rgba(0,0,0,0.8); padding:50px; border-radius:20px; border:1px solid #fff; }
+        button { padding:15px 50px; background:#fff; color:#000; border:none; border-radius:10px; font-size:20px; font-weight:bold; cursor:pointer; }
+        #text-box { display:none; position:fixed; z-index:5; text-align:center; width:80%; color:#fff; font-size:35px; line-height:1.6; animation: fadeInOut 6s infinite; }
+        @keyframes fadeInOut { 0%,100% {opacity:0;} 50% {opacity:1;} }
     </style>
 </head>
 <body>
 
-    <canvas id="stars"></canvas>
+    <canvas id="bg"></canvas>
 
-    <audio id="vibeAudio" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    <audio id="pianoMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
     </audio>
 
     <div id="ui">
-        <h1 style="color:#00d2ff">عالم بكر ✨</h1>
-        <p style="color:#eee">الموسيقى المرة دي "خيال" .. دوس دخول</p>
-        <button onclick="startVibe()">دخول ❤️</button>
+        <h1 style="color:#fff">عالم بكر الخاص ✨</h1>
+        <button onclick="start()">دخول بهدوء</button>
     </div>
 
-    <div id="lyrics-box"></div>
+    <div id="text-box"></div>
 
     <script>
-        const funnyWords = [
-            "أنتِ زي النت في مصر.. بتقطعي قلبي بس ماليش غيرك 😂",
-            "لو الحب حتة قشطة.. فأنتِ العلبة كلها 🍯",
-            "يا مساء البطاطس.. يا اللي حبك في قلبي غاطس 🥔",
-            "أنا قلبي مكرونة وأنتِ الصلصة بتاعتي 🍝",
-            "يا واد يا مربى.. في حبك قلبي اتدبى 😍",
-            "عنيكي فيها كهربا.. كهروباء السد العالي ⚡",
-            "أنتِ زي الشاحن الأصلي.. ماقدرش أستغنى عنك 🔋"
+        const quotes = [
+            "أنتِ زي القهوة.. بتعدلي مودي بكلمة واحدة",
+            "في ناس زي البحر.. مريحين للأعصاب بس غدارين 😂",
+            "الروقان محتاج دماغ فاضية.. وحب حقيقي",
+            "يا مساء الجمال.. على اللي شاغل البال",
+            "أنتِ النسخة الأصلية في زمن كله تقليد"
         ];
         
-        let index = 0;
-        const canvas = document.getElementById('stars');
+        let i = 0;
+        function start() {
+            document.getElementById('pianoMusic').play();
+            document.getElementById('ui').style.display='none';
+            const box = document.getElementById('text-box');
+            box.style.display='block';
+            
+            // الكلام هيتغير كل 6 ثواني (أبطأ بكتير)
+            setInterval(() => {
+                box.innerText = quotes[i];
+                i = (i + 1) % quotes.length;
+            }, 6000);
+            
+            animate();
+        }
+
+        const canvas = document.getElementById('bg');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        function startVibe() {
-            const audio = document.getElementById('vibeAudio');
-            audio.play();
-
-            document.getElementById('ui').style.display='none';
-            document.getElementById('lyrics-box').style.display='block';
-            
-            setInterval(() => {
-                document.getElementById('lyrics-box').innerText = funnyWords[index];
-                index = (index + 1) % funnyWords.length;
-            }, 4000);
-            
-            drawStars();
-        }
-
-        function drawStars() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+        function animate() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00d2ff";
-            for(let i=0; i<12; i++) {
-                ctx.beginPath();
-                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1.2, 0, Math.PI*2);
-                ctx.fill();
-            }
-            requestAnimationFrame(drawStars);
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 0.8, 0, Math.PI*2);
+            ctx.fill();
+            requestAnimationFrame(animate);
         }
     </script>
 </body>
